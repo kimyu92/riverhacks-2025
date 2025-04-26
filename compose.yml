@@ -24,10 +24,10 @@ services:
 
   # frontend:
   #   build:
-  #     context: ./app
+  #     context: ./frontend
   #   volumes:
-  #     - ./app:/app
-  #     - /app/node_modules
+  #     - ./frontend:/frontend
+  #     - /frontend/node_modules
   #   ports:
   #     - "5173:5173"
   #   depends_on:
