@@ -38,6 +38,18 @@ db-dump:
 db-seed:
 	docker compose exec backend python -m db.seed
 
+# Reset the database completely (remove volume and reseed)
+db-reset:
+	docker compose down -v
+	docker compose up -d db
+	@echo "Waiting for database to initialize..."
+	@sleep 5
+	docker compose up -d backend
+	@echo "Waiting for backend to start..."
+	@sleep 3
+	docker compose exec backend python -m db.seed
+	@echo "Database reset and reseeded successfully!"
+
 # Access backend container shell
 backend-shell:
 	docker compose exec backend bash
@@ -71,10 +83,11 @@ help:
 	@echo "  make db-exec file=path/to/file.sql   - Execute SQL file against database"
 	@echo "  make db-dump file=backup.sql         - Dump database to a file"
 	@echo "  make db-seed       - Seed the database with sample data"
+	@echo "  make db-reset      - Reset database (remove volume and reseed)"
 	@echo "  make backend-shell - Access backend container shell"
 	@echo "  make logs          - View logs from all services"
 	@echo "  make logs-service service=backend    - View logs from specific service"
 	@echo "  make rebuild       - Rebuild containers without using cache"
 	@echo "  make ps            - Show running containers"
 
-.PHONY: start start-logs down stop restart db db-exec db-dump db-seed backend-shell logs logs-service rebuild ps help
+.PHONY: start start-logs down stop restart db db-exec db-dump db-seed db-reset backend-shell logs logs-service rebuild ps help
