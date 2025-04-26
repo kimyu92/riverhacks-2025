@@ -113,30 +113,78 @@ pnpm run dev
 
 ## 📡 API Endpoints
 
+### Authentication Example
+
+Most endpoints require authentication. First, obtain a JWT token:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "adminpass"}'
+```
+
+**Response:**
+```json
+{
+  "access_token": "<access_token>",
+  "user": {
+    "id": 1,
+    "organization_id": null,
+    "role": "admin",
+    "username": "admin"
+  }
+}
+```
+
+Then use the token in subsequent requests:
+
+```bash
+curl -X GET http://localhost:8000/api/v1/shelters \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
 ### User Authentication
-- `POST /register` - Register a new user
-- `POST /login` - Login and receive JWT token
+- `POST /api/v1/register` - Register a new user
+- `POST /api/v1/login` - Login and receive JWT token
 
 ### Organizations
-- `GET /organizations` - List all organizations
-- `POST /organizations` - Create a new organization (admin only)
+- `GET /api/v1/organizations` - List all organizations
+- `POST /api/v1/organizations` - Create a new organization (admin only)
 
 ### Volunteers
-- `POST /volunteers` - Register a new volunteer (admin only)
+- `POST /api/v1/volunteers` - Register a new volunteer (admin only)
 
 ### Shelters
-- `GET /shelters` - List all shelters
-- `POST /shelters` - Add a new shelter (admin/volunteer)
-- `GET /shelters/<id>` - Get details for a specific shelter
-- `PUT /shelters/<id>` - Update shelter information (admin/volunteer)
-- `DELETE /shelters/<id>` - Remove a shelter (admin only)
+- `GET /api/v1/shelters` - List all shelters
+- `POST /api/v1/shelters` - Add a new shelter (admin/volunteer)
+- `GET /api/v1/shelters/<id>` - Get details for a specific shelter
+- `PUT /api/v1/shelters/<id>` - Update shelter information (admin/volunteer)
+- `DELETE /api/v1/shelters/<id>` - Remove a shelter (admin only)
 
 ### Food Resources
-- `GET /foods` - List all food resources
-- `POST /foods` - Add a new food resource (admin/volunteer)
-- `GET /foods/<id>` - Get details for a specific food resource
-- `PUT /foods/<id>` - Update food resource information (admin/volunteer)
-- `DELETE /foods/<id>` - Remove a food resource (admin only)
+- `GET /api/v1/food-resources` - List all food resources
+- `POST /api/v1/food-resources` - Add a new food resource (admin/volunteer)
+- `GET /api/v1/food-resources/<id>` - Get details for a specific food resource
+- `PUT /api/v1/food-resources/<id>` - Update food resource information (admin/volunteer)
+- `DELETE /api/v1/food-resources/<id>` - Remove a food resource (admin only)
+
+### Safety Reports
+- `GET /api/v1/safety-reports` - List all safety reports with optional filters
+- `POST /api/v1/safety-reports` - Submit a new safety report (authentication optional)
+- `GET /api/v1/safety-reports/<id>` - Get details for a specific safety report
+- `PUT /api/v1/safety-reports/<id>` - Update a safety report (admin or original reporter)
+- `DELETE /api/v1/safety-reports/<id>` - Remove a safety report (admin only)
+
+### Hospitals
+- `GET /api/v1/hospitals` - List all hospitals with optional filters
+- `POST /api/v1/hospitals` - Add a new hospital (admin only)
+- `GET /api/v1/hospitals/<id>` - Get details for a specific hospital
+- `PUT /api/v1/hospitals/<id>` - Update hospital information (admin only)
+- `DELETE /api/v1/hospitals/<id>` - Remove a hospital (admin only)
+
+### Chatbot
+- `POST /api/v1/chatbot` - Get answers to safety questions from the local AI chatbot
+- `GET /api/v1/chatbot/topics` - Get available topics that the chatbot can answer
 
 ## 🔮 Future Enhancements
 
