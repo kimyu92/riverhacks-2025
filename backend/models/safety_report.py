@@ -9,7 +9,7 @@ class SafetyReport(db.Model):
     report_type = db.Column(db.String(50), nullable=False)  # 'accessibility', 'hazard', 'safety', etc
     status = db.Column(db.String(20), default='pending')  # 'pending', 'verified', 'resolved'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'), nullable=True)
 
     def to_dict(self):
         return {

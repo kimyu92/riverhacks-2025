@@ -2,6 +2,8 @@ from db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
+  __tablename__ = 'app_user'  # Set custom table name to avoid conflict with PostgreSQL reserved name
+
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(80), unique=True, nullable=False)
   password_hash = db.Column(db.String(256), nullable=False)  # Increased from 128 to 256

@@ -38,22 +38,20 @@ cd riverhacks-2025
 
 2. Start the application with Docker Compose:
 ```bash
+# Start all services in detached mode
+make start
+
+# Alternative: Start with logs visible
 docker compose up
 ```
 
-This will start:
-- PostgreSQL database on port 5432
-- Backend Flask API on port 5000
-- Frontend development server (when uncommented in compose.yml)
-
-3. Seed the database with sample data:
+3. Set up the database:
 ```bash
-# Option 1: Using Docker (recommended)
-docker compose exec backend python -m db.seed
+# Reset and seed the database (recommended for first-time setup)
+make db-reset
 
-# Option 2: Running directly (if you have local environment set up)
-cd backend
-python -m db.seed
+# Or just seed the database if it's already set up
+make db-seed
 ```
 
 This will populate the database with organizations, users, shelters, hospitals, food resources, and safety reports for testing.
@@ -61,6 +59,31 @@ This will populate the database with organizations, users, shelters, hospitals, 
 4. Access the application:
 - API: http://localhost:5000
 - Frontend: http://localhost:5173 (when frontend service is enabled)
+
+### Common Command Scenarios
+
+```bash
+# View logs from all running services
+make logs
+
+# View logs for a specific service
+make logs-service service=backend
+
+# Access the PostgreSQL database CLI
+make db
+
+# Reset database completely (useful when schema changes)
+make db-reset
+
+# Stop all services without removing containers
+make stop
+
+# Stop and remove all containers
+make down
+
+# Access backend container shell (for debugging)
+make backend-shell
+```
 
 ### Development Setup
 
