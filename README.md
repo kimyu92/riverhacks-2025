@@ -46,7 +46,19 @@ This will start:
 - Backend Flask API on port 5000
 - Frontend development server (when uncommented in compose.yml)
 
-3. Access the application:
+3. Seed the database with sample data:
+```bash
+# Option 1: Using Docker (recommended)
+docker compose exec backend python -m db.seed
+
+# Option 2: Running directly (if you have local environment set up)
+cd backend
+python -m db.seed
+```
+
+This will populate the database with organizations, users, shelters, hospitals, food resources, and safety reports for testing.
+
+4. Access the application:
 - API: http://localhost:5000
 - Frontend: http://localhost:5173 (when frontend service is enabled)
 
