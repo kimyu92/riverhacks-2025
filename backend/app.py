@@ -19,7 +19,10 @@ jwt = JWTManager(app)
 # Register all blueprints
 register_blueprints(app)
 
+# Create database tables if they don't exist
+with app.app_context():
+    db.create_all()
+    print("Database tables created/updated.")
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(host='0.0.0.0', port=5000)
