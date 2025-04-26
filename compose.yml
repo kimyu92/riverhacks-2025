@@ -22,16 +22,20 @@ services:
       - db
     command: flask run --host=0.0.0.0
 
-  # frontend:
-  #   build:
-  #     context: ./app
-  #   volumes:
-  #     - ./app:/app
-  #     - /app/node_modules
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - backend
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    command: pnpm run dev
 
 volumes:
   postgres_data:

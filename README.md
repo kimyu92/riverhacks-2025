@@ -32,7 +32,7 @@ Our mission is to ensure that all Austin residents, including those with disabil
 
 1. Clone the repository:
 ```bash
-git clone git@github.com:kimyu92/riverhacks-2025.gi
+git clone git@github.com:kimyu92/riverhacks-2025.git
 cd riverhacks-2025
 ```
 
@@ -42,7 +42,7 @@ cd riverhacks-2025
 make start
 
 # Alternative: Start with logs visible
-docker compose up
+make start-logs
 ```
 
 3. Set up the database:
@@ -57,8 +57,8 @@ make db-seed
 This will populate the database with organizations, users, shelters, hospitals, food resources, and safety reports for testing.
 
 4. Access the application:
-- API: http://localhost:5000
-- Frontend: http://localhost:5173 (when frontend service is enabled)
+- API: http://localhost:8000
+- Frontend: http://localhost:5173
 
 ### Common Command Scenarios
 
@@ -83,6 +83,15 @@ make down
 
 # Access backend container shell (for debugging)
 make backend-shell
+
+# Access frontend container shell
+make frontend-shell
+
+# Install frontend dependencies
+make frontend-install
+
+# Run frontend development server separately
+make frontend-dev
 ```
 
 ### Development Setup
@@ -95,10 +104,11 @@ cd backend
 pip install -r requirements.txt
 ```
 
-2. Frontend setup (when implemented):
+2. Frontend setup:
 ```bash
-cd app
+cd frontend
 pnpm install
+pnpm run dev
 ```
 
 ## 📡 API Endpoints
