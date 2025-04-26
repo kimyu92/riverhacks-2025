@@ -9,7 +9,7 @@ import { MapPin, AlertCircle, MessageSquare, Bell, Menu, Search, Accessibility, 
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50">
-
+      test
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-blue-600 to-blue-800 text-white py-12 px-4">
         <div className="container mx-auto max-w-3xl text-center">
