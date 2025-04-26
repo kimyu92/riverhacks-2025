@@ -58,7 +58,7 @@ This will populate the database with organizations, users, shelters, hospitals, 
 
 4. Access the application:
 - API: http://localhost:8000
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:3000
 
 ### Common Command Scenarios
 

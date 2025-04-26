@@ -17,7 +17,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Expose the port that Next.js uses
-EXPOSE 5173
+EXPOSE 3000
 
 # Set environment to development
 ENV NODE_ENV=development
