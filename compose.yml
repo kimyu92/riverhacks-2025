@@ -14,7 +14,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "5000:5000"
+      - "8000:5000"
     environment:
       FLASK_ENV: development
       DATABASE_URL: postgresql://hackuser:hackpass@db:5432/hacksafety

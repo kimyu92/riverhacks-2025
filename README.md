@@ -25,7 +25,7 @@ Our mission is to ensure that all Austin residents, including those with disabil
 ## 🚀 Setup Instructions
 
 ### Prerequisites
-- Docker and Docker Compose
+- [Docker](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/)
 - Git
 
 ### Quick Start
