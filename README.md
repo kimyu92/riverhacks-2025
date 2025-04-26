@@ -78,6 +78,9 @@ make stop
 # Stop and remove all containers
 make down
 
+# Remove Docker images to force rebuild (useful when dependencies change)
+make remove-images
+
 # Access backend container shell (for debugging)
 make backend-shell
 
@@ -136,8 +139,20 @@ curl -X POST http://localhost:8000/api/v1/login \
 Then use the token in subsequent requests:
 
 ```bash
-curl -X GET http://localhost:8000/api/v1/shelters \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+# public
+curl -X GET http://localhost:8000/api/v1/shelters
+
+# authed protected
+curl -X POST http://localhost:8000/api/v1/shelters \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Emergency Relief Center",
+    "location": "123 Oak Street, Austin, TX 78701",
+    "wheelchair_accessible": true,
+    "visual_accommodations": false,
+    "audio_accommodations": true
+  }'
 ```
 
 ### User Authentication
@@ -199,3 +214,69 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Troubleshooting
+
+### Docker Image Reset Scenarios
+
+If you encounter any of these issues, you may need to reset your Docker images using `make remove-images`:
+
+- Backend or frontend dependencies have changed (package.json or requirements.txt updated)
+- Docker containers are not reflecting your latest code changes
+- You're experiencing unusual errors after pulling new changes
+- Docker container builds are failing with cached layer issues
+
+Reset process:
+
+```bash
+# Stop all running containers
+make down
+
+# Remove Docker images to force a complete rebuild
+make remove-images
+
+# Start services again (this will rebuild the images)
+make start
+```
+
+### Common Issues
+
+#### Database Connection Errors
+```
+# Reset the database completely
+make db-reset
+```
+
+#### Frontend Not Loading Correctly
+```
+# Access frontend container
+make frontend-shell
+
+# Install or update dependencies
+pnpm install
+
+# Exit shell and restart
+exit
+make frontend-start
+```
+
+#### Backend API Not Working
+```
+# View backend logs
+make logs-service service=backend
+
+# Access backend shell for debugging
+make backend-shell
+```
+
+#### Docker Container Won't Start
+```
+# Check running containers
+make ps
+
+# Remove containers and volumes
+docker compose down -v
+
+# Start clean
+make start
+```
