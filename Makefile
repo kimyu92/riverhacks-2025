@@ -20,6 +20,22 @@ stop:
 restart:
 	docker compose restart
 
+# Start only backend service
+backend-start:
+	docker compose up -d backend
+
+# Start only frontend service
+frontend-start:
+	docker compose up -d frontend
+
+# Start backend with logs
+backend-start-logs:
+	docker compose up backend
+
+# Start frontend with logs
+frontend-start-logs:
+	docker compose up frontend
+
 # Access PostgreSQL database CLI
 db:
 	docker compose exec db bash -c "PGPASSWORD=hackpass psql -U hackuser hacksafety"
@@ -58,6 +74,21 @@ backend-shell:
 frontend-shell:
 	docker compose exec frontend bash
 
+# Remove backend image
+backend-remove-image:
+	docker compose rm -f backend
+	docker rmi riverhacks-2025-backend
+
+# Remove frontend image
+frontend-remove-image:
+	docker compose rm -f frontend
+	docker rmi riverhacks-2025-frontend
+
+# Remove both backend and frontend images
+remove-images:
+	docker compose rm -f backend frontend
+	docker rmi riverhacks-2025-backend riverhacks-2025-frontend
+
 # Frontend commands
 frontend-install:
 	docker compose exec frontend pnpm install
@@ -73,6 +104,26 @@ logs:
 # Usage: make logs-service service=backend
 logs-service:
 	docker compose logs -f $(service)
+
+# View logs with specific number of lines
+# Usage: make logs-tail lines=100
+logs-tail:
+	docker compose logs -f --tail=$(lines)
+
+# View logs for a specific service with number of lines
+# Usage: make logs-service-tail service=backend lines=100
+logs-service-tail:
+	docker compose logs -f $(service) --tail=$(lines)
+
+# View logs since a specific time
+# Usage: make logs-since time="1h" (1h, 10m, 30s, 2023-01-30, etc.)
+logs-since:
+	docker compose logs -f --since=$(time)
+
+# View logs for a specific service since a specific time
+# Usage: make logs-service-since service=backend time="1h"
+logs-service-since:
+	docker compose logs -f $(service) --since=$(time)
 
 # Rebuild containers
 rebuild:
@@ -90,6 +141,10 @@ help:
 	@echo "  make down          - Stop and remove containers"
 	@echo "  make stop          - Stop services without removing containers"
 	@echo "  make restart       - Restart all services"
+	@echo "  make backend-start - Start only backend service"
+	@echo "  make frontend-start - Start only frontend service"
+	@echo "  make backend-start-logs - Start backend with logs"
+	@echo "  make frontend-start-logs - Start frontend with logs"
 	@echo "  make db            - Access PostgreSQL database CLI"
 	@echo "  make db-exec file=path/to/file.sql   - Execute SQL file against database"
 	@echo "  make db-dump file=backup.sql         - Dump database to a file"
@@ -97,11 +152,18 @@ help:
 	@echo "  make db-reset      - Reset database (remove volume and reseed)"
 	@echo "  make backend-shell - Access backend container shell"
 	@echo "  make frontend-shell - Access frontend container shell"
+	@echo "  make backend-remove-image - Remove backend image"
+	@echo "  make frontend-remove-image - Remove frontend image"
+	@echo "  make remove-images - Remove both backend and frontend images"
 	@echo "  make frontend-install - Install frontend dependencies"
 	@echo "  make frontend-dev  - Run frontend development server"
 	@echo "  make logs          - View logs from all services"
 	@echo "  make logs-service service=backend    - View logs from specific service"
+	@echo "  make logs-tail lines=100             - View logs with specific number of lines"
+	@echo "  make logs-service-tail service=backend lines=100 - View service logs with line limit"
+	@echo "  make logs-since time='1h'            - View logs since specific time (1h, 10m, etc.)"
+	@echo "  make logs-service-since service=backend time='1h' - View service logs since specific time"
 	@echo "  make rebuild       - Rebuild containers without using cache"
 	@echo "  make ps            - Show running containers"
 
-.PHONY: start start-logs down stop restart db db-exec db-dump db-seed db-reset backend-shell frontend-shell frontend-install frontend-dev logs logs-service rebuild ps help
+.PHONY: start start-logs down stop restart backend-start frontend-start backend-start-logs frontend-start-logs db db-exec db-dump db-seed db-reset backend-shell frontend-shell backend-remove-image frontend-remove-image remove-images frontend-install frontend-dev logs logs-service logs-tail logs-service-tail logs-since logs-service-since rebuild ps help

@@ -11,6 +11,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://hackuser:hackpass@db:5432/hacksafety')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super-secret')
+# Enable debug mode by default
+app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
 # Initialize extensions
 db.init_app(app)
@@ -25,4 +27,4 @@ with app.app_context():
     print("Database tables created/updated.")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host='0.0.0.0', port=8000, debug=app.config['DEBUG'])
