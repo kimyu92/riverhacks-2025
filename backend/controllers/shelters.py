@@ -34,7 +34,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
 
 @shelters_bp.route("/shelter-resources-from-serp", methods=["GET"])
-def get_food_resources():
+def get_shelters_serp():
     """Get all shelter resources with optional filters and sorting by distance"""
     lat = request.args.get('lat', type=float)
     lon = request.args.get('lon', type=float)
@@ -85,7 +85,7 @@ def get_food_resources():
 
 
 @shelters_bp.route("/shelters-by-users", methods=["GET"])
-def get_shelters():
+def get_shelters_users():
     """Get all shelters with optional accessibility filters"""
     # Parse filter parameters
     wheelchair = request.args.get('wheelchair', type=bool)

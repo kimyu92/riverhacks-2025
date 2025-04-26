@@ -34,7 +34,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
 
 @food_bp.route("/food-resources-from-serp", methods=["GET"])
-def get_food_resources():
+def get_food_resources_serp():
     """Get all food resources with optional filters and sorting by distance"""
     lat = request.args.get('lat', type=float)
     lon = request.args.get('lon', type=float)
@@ -85,7 +85,7 @@ def get_food_resources():
 
 
 @food_bp.route("/food-resources-by-users", methods=["GET"])
-def get_food_resources():
+def get_food_resources_users():
     """Get all food resources with optional filters and sorting by distance"""
     # Get user location for distance sorting
     lat = request.args.get('lat', type=float)
