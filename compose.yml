@@ -14,13 +14,13 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "8000:5000"
+      - "8000:8000"
     environment:
       FLASK_ENV: development
       DATABASE_URL: postgresql://hackuser:hackpass@db:5432/hacksafety
     depends_on:
       - db
-    command: flask run --host=0.0.0.0
+    command: python app.py
 
   frontend:
     build:
