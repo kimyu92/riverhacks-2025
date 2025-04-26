@@ -54,6 +54,17 @@ db-reset:
 backend-shell:
 	docker compose exec backend bash
 
+# Access frontend container shell
+frontend-shell:
+	docker compose exec frontend bash
+
+# Frontend commands
+frontend-install:
+	docker compose exec frontend pnpm install
+
+frontend-dev:
+	docker compose exec frontend pnpm run dev
+
 # View logs
 logs:
 	docker compose logs -f
@@ -85,9 +96,12 @@ help:
 	@echo "  make db-seed       - Seed the database with sample data"
 	@echo "  make db-reset      - Reset database (remove volume and reseed)"
 	@echo "  make backend-shell - Access backend container shell"
+	@echo "  make frontend-shell - Access frontend container shell"
+	@echo "  make frontend-install - Install frontend dependencies"
+	@echo "  make frontend-dev  - Run frontend development server"
 	@echo "  make logs          - View logs from all services"
 	@echo "  make logs-service service=backend    - View logs from specific service"
 	@echo "  make rebuild       - Rebuild containers without using cache"
 	@echo "  make ps            - Show running containers"
 
-.PHONY: start start-logs down stop restart db db-exec db-dump db-seed db-reset backend-shell logs logs-service rebuild ps help
+.PHONY: start start-logs down stop restart db db-exec db-dump db-seed db-reset backend-shell frontend-shell frontend-install frontend-dev logs logs-service rebuild ps help
