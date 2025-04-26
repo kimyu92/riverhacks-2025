@@ -120,7 +120,7 @@ Most endpoints require authentication. First, obtain a JWT token:
 ```bash
 curl -X POST http://localhost:8000/api/v1/login \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "adminpass"}'
+  -d '{"username": "admin", "password": "admin123"}'
 ```
 
 **Response:**
