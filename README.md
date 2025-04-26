@@ -1,25 +1,22 @@
 # ToSafeToBee :two: :green_heart: :two: :bee: - ATX
 
 ## 🚀 Description
+ToSafeToBee is a unified platform designed to connect people in need — especially the homeless — with NGOs, shelters, food banks, healthcare services, and local support organizations around them.
 
-ToSafeToBee is an innovative mobile-first web application designed to enhance public safety, accessibility, and community engagement in Austin, especially during emergencies. The platform provides real-time information about critical resources, accessible emergency locations, and community-reported safety issues.
-
-Our mission is to ensure that all Austin residents, including those with disabilities, can quickly access vital information during emergencies and contribute to community safety through a collaborative platform.
 
 ### Key Features
 
-- **Real-time Resource Locator**: Interactive map displaying emergency locations (shelters, hospitals, cooling stations)
-- **Accessibility Filtering**: Find resources filtered by wheelchair accessibility and visual/audio accommodations
-- **Smart Local Chatbot**: AI-powered assistance that works offline for emergency preparedness information
-- **Community Engagement**: Report safety issues, accessibility barriers, and share available resources
-- **Configurable Alerts**: Customizable notifications for local emergencies based on proximity
+- **User Contributions**: Anyone can add shelters, food offerings, or services they know about.
+- **Zipcode-based Discovery**: Enter your area and see resources mapped close to you.
+- **Scalable Platform**: Easily extendable to new cities and states.
+- **NGO Partnership Portal (Coming Soon)**: NGOs can register and manage their resources directly.
+- **Future AI Integration**: Use WebAI to match people with personalized help (planned).
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: React, Next.js and ShadCN
 - **Backend**: Python Flask RESTful API
 - **Database**: PostgreSQL
-- **AI Integration**: Local LLM (Ollama) with webAI
 - **Deployment**: Docker containerization
 
 ## 🚀 Setup Instructions
