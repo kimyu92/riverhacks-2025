@@ -28,6 +28,10 @@ backend-start:
 frontend-start:
 	docker compose up -d frontend
 
+# Start Nginx service
+nginx-start:
+	docker compose up -d nginx
+
 # Start backend with logs
 backend-start-logs:
 	docker compose up backend
@@ -35,6 +39,10 @@ backend-start-logs:
 # Start frontend with logs
 frontend-start-logs:
 	docker compose up frontend
+
+# Start Nginx with logs
+nginx-start-logs:
+	docker compose up nginx
 
 # Access PostgreSQL database CLI
 db:
@@ -74,6 +82,10 @@ backend-shell:
 frontend-shell:
 	docker compose exec frontend bash
 
+# Access Nginx container shell
+nginx-shell:
+	docker compose exec nginx sh
+
 # Remove backend image
 backend-remove-image:
 	docker compose rm -f backend
@@ -84,10 +96,24 @@ frontend-remove-image:
 	docker compose rm -f frontend
 	docker rmi riverhacks-2025-frontend
 
-# Remove both backend and frontend images
+# Remove Nginx image
+nginx-remove-image:
+	docker compose rm -f nginx
+	docker rmi nginx:alpine
+
+# Remove all images
 remove-images:
-	docker compose rm -f backend frontend
-	docker rmi riverhacks-2025-backend riverhacks-2025-frontend
+	docker compose rm -f backend frontend nginx
+	docker rmi riverhacks-2025-backend riverhacks-2025-frontend nginx:alpine 2>/dev/null || true
+
+# Regenerate SSL certificates
+ssl-regen:
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/nginx.key -out nginx/ssl/nginx.crt -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"
+	@echo "SSL certificates regenerated. Restart Nginx to apply changes: make nginx-restart"
+
+# Restart Nginx to apply new configurations/certificates
+nginx-restart:
+	docker compose restart nginx
 
 # Frontend commands
 frontend-install:
@@ -143,8 +169,10 @@ help:
 	@echo "  make restart       - Restart all services"
 	@echo "  make backend-start - Start only backend service"
 	@echo "  make frontend-start - Start only frontend service"
+	@echo "  make nginx-start   - Start only Nginx service"
 	@echo "  make backend-start-logs - Start backend with logs"
 	@echo "  make frontend-start-logs - Start frontend with logs"
+	@echo "  make nginx-start-logs - Start Nginx with logs"
 	@echo "  make db            - Access PostgreSQL database CLI"
 	@echo "  make db-exec file=path/to/file.sql   - Execute SQL file against database"
 	@echo "  make db-dump file=backup.sql         - Dump database to a file"
@@ -152,9 +180,13 @@ help:
 	@echo "  make db-reset      - Reset database (remove volume and reseed)"
 	@echo "  make backend-shell - Access backend container shell"
 	@echo "  make frontend-shell - Access frontend container shell"
+	@echo "  make nginx-shell   - Access Nginx container shell"
 	@echo "  make backend-remove-image - Remove backend image"
 	@echo "  make frontend-remove-image - Remove frontend image"
-	@echo "  make remove-images - Remove both backend and frontend images"
+	@echo "  make nginx-remove-image - Remove Nginx image"
+	@echo "  make remove-images - Remove all images"
+	@echo "  make ssl-regen     - Regenerate SSL certificates"
+	@echo "  make nginx-restart - Restart Nginx to apply new configurations"
 	@echo "  make frontend-install - Install frontend dependencies"
 	@echo "  make frontend-dev  - Run frontend development server"
 	@echo "  make logs          - View logs from all services"
@@ -166,4 +198,4 @@ help:
 	@echo "  make rebuild       - Rebuild containers without using cache"
 	@echo "  make ps            - Show running containers"
 
-.PHONY: start start-logs down stop restart backend-start frontend-start backend-start-logs frontend-start-logs db db-exec db-dump db-seed db-reset backend-shell frontend-shell backend-remove-image frontend-remove-image remove-images frontend-install frontend-dev logs logs-service logs-tail logs-service-tail logs-since logs-service-since rebuild ps help
+.PHONY: start start-logs down stop restart backend-start frontend-start nginx-start backend-start-logs frontend-start-logs nginx-start-logs db db-exec db-dump db-seed db-reset backend-shell frontend-shell nginx-shell backend-remove-image frontend-remove-image nginx-remove-image remove-images ssl-regen nginx-restart frontend-install frontend-dev logs logs-service logs-tail logs-service-tail logs-since logs-service-since rebuild ps help

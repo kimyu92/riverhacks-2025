@@ -18,25 +18,21 @@ app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 # Initialize extensions
 db.init_app(app)
 jwt = JWTManager(app)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+CORS(
+  app,
+  supports_credentials=True,
+  origins=["https://localhost", "http://localhost", "http://localhost:3000", "https://localhost:443"],
+  allow_headers=["Content-Type", "Authorization"],
+  methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
 
 # Register all blueprints
 register_blueprints(app)
 
 # Create database tables if they don't exist
 with app.app_context():
-    db.create_all()
-    print("Database tables created/updated.")
+  db.create_all()
+  print("Database tables created/updated.")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=app.config['DEBUG'])
-
-@app.before_request
-def before_request():
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-    }
-    if request.method.lower() == 'options':
-        return jsonify(headers), 200

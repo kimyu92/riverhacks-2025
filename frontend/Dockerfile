@@ -7,11 +7,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Set working directory
 WORKDIR /frontend
 
-# Copy package.json and pnpm-lock.yaml to leverage Docker cache
-COPY package.json pnpm-lock.yaml ./
+# Copy package.json and package-lock.json to leverage Docker cache
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN npm install
 
 # Copy the rest of the application
 COPY . .
@@ -22,5 +22,5 @@ EXPOSE 3000
 # Set environment to development
 ENV NODE_ENV=development
 
-# Command to run the development server
-CMD ["pnpm", "run", "dev"]
+# Command to run the development server - add host flag
+CMD ["npm", "run", "dev", "--", "--host"]

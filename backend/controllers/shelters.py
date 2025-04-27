@@ -4,6 +4,7 @@ from models import Shelter, User
 from services.serp_api_integration import search_resources_service
 from db import db
 
+# Remove the URL prefix as it's now handled by the parent blueprint
 shelters_bp = Blueprint("shelters", __name__)
 
 @shelters_bp.route("/shelters", methods=["GET"])
