@@ -1,6 +1,8 @@
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, MapPin, Map, Info } from "lucide-react";
+import { Menu, MapPin, Map, Info, LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useUserStore } from "@/stores/useUserStore";
 
 interface HeaderProps {
   isOffline: boolean;
@@ -19,6 +22,8 @@ interface HeaderProps {
 }
 
 export default function Header({ isOffline, setIsOffline }: HeaderProps) {
+  const { isAuthenticated, logout } = useUserStore();
+
   return (
     <header className="sticky top-0 z-10 bg-white shadow-sm">
       <div className="container flex items-center justify-between p-4">
@@ -78,24 +83,49 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
                     <span>Map View</span>
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/chat"
-                    className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
-                  >
-                    <MapPin className="h-5 w-5" />
-                    <span>Emergency Assistant</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
-                  >
-                    <Info className="h-5 w-5" />
-                    <span>Profile & Settings</span>
-                  </Link>
-                </li>
+                {isAuthenticated && (
+                  <li>
+                    <Link
+                      href="/chat"
+                      className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
+                    >
+                      <MapPin className="h-5 w-5" />
+                      <span>Emergency Assistant</span>
+                    </Link>
+                  </li>
+                )}
+                {isAuthenticated ? (
+                  <li>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
+                    >
+                      <User className="h-5 w-5" />
+                      <span>Profile & Settings</span>
+                    </Link>
+                  </li>
+                ) : (
+                  <li>
+                    <Link
+                      href="/login"
+                      className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
+                    >
+                      <LogIn className="h-5 w-5" />
+                      <span>Login</span>
+                    </Link>
+                  </li>
+                )}
+                {isAuthenticated && (
+                  <li>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md text-red-600"
+                    >
+                      <LogIn className="h-5 w-5 rotate-180" />
+                      <span>Logout</span>
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           </SheetContent>

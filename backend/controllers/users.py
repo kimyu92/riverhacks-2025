@@ -6,9 +6,10 @@ from db import db
 
 users_bp = Blueprint("users", __name__)
 
-@users_bp.route("/login", methods=["POST"])
+@users_bp.route("/api/v1/login", methods=["POST"])
 def login():
     data = request.get_json()
+    print(f"Login data: {data}")
     user = User.query.filter_by(username=data.get('username')).first()
     if not user or not user.check_password(data.get('password')):
         return jsonify({"message": "Invalid credentials"}), 401
@@ -16,7 +17,7 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 200
 
-@users_bp.route("/logout", methods=["POST"])
+@users_bp.route("/api/v1/logout", methods=["POST"])
 @jwt_required()
 def logout():
     # In a token-based authentication system like JWT,

@@ -34,6 +34,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import MapPlaceholder from "../map/components/MapPlaceholder";
 import ResourceDetails from "../map/components/ResourceDetails";
 import { icon } from 'leaflet';
+import { BACKEND_HOST_URI } from '@/constants/baseUri';
 
 interface FoodResource {
   id: number;
@@ -133,11 +134,11 @@ export default function Results() {
       try {
         let url = '';
         if (resourceType === 'Food Banks') {
-          url = `http://localhost:8000/api/v1/food-resources?zipcode=${zipCode}`;
+          url = `${BACKEND_HOST_URI}/api/v1/food-resources?zipcode=${zipCode}`;
         } else if (resourceType === 'Shelters') {
-          url = `http://localhost:8000/api/v1/shelters?zipcode=${zipCode}`;
+          url = `${BACKEND_HOST_URI}/api/v1/shelters?zipcode=${zipCode}`;
         } else if (resourceType === 'Cooling Stations') {
-          url = `http://localhost:8000/api/v1/cooling-stations?zipcode=${zipCode}`;
+          url = `${BACKEND_HOST_URI}/api/v1/cooling-stations?zipcode=${zipCode}`;
         }
 
         if (url) {
