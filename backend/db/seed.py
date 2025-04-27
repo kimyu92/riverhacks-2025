@@ -46,23 +46,42 @@ def seed_database():
     db.session.commit()
     print("Added organizations")
 
-    # Create users
+    # Create admin
     admin = User(username="admin", role="admin")
     admin.set_password("admin123")
 
-    volunteer1 = User(username="volunteer1", role="volunteer", organization_id=redcross.id)
-    volunteer1.set_password("password")
+    # Create volunteers
+    volunteers_data = [
+        ("john.doe", "volunteer", redcross.id),
+        ("jane.doe", "volunteer", redcross.id),
+        ("john.conner", "volunteer", salvation_army.id),
+        ("sarah.conner", "volunteer", salvation_army.id),
+        ("vincent.conner", "volunteer", salvation_army.id),
+        ("mike.tyson", "volunteer", salvation_army.id),
+        ("mackenzie.scott", "volunteer", feeding_america.id),
+        ("melinda.gates", "volunteer", feeding_america.id),
+        ("leonardo.diCaprio", "volunteer", habitat.id),
+    ]
 
-    volunteer2 = User(username="volunteer2", role="volunteer", organization_id=salvation_army.id)
-    volunteer2.set_password("password")
+    volunteers = []
+    for username, role, organization_id in volunteers_data:
+        volunteer = User(username=username, role=role, organization_id=organization_id)
+        volunteer.set_password("password")
+        volunteers.append(volunteer)
 
-    user1 = User(username="user1", role="user")
+    # Create regular users
+    user1 = User(username="steve.job", role="user")
     user1.set_password("password")
 
-    user2 = User(username="user2", role="user")
+    user2 = User(username="alice.job", role="user")
     user2.set_password("password")
 
-    db.session.add_all([admin, volunteer1, volunteer2, user1, user2])
+    db.session.add_all([
+        admin,
+        *volunteers,
+        user1,
+        user2,
+    ])
     db.session.commit()
     print("Added users")
 
