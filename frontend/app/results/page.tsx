@@ -50,6 +50,8 @@ interface FoodResource {
   status?: string;
   capacity?: string;
   lastUpdated?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface ShelterResource {
@@ -61,6 +63,7 @@ interface ShelterResource {
   audio_accommodations: boolean;
   visual_accommodations: boolean;
   wheelchair_accessible: boolean;
+  description?: string;              // added optional description
   type?: string;
   distance?: number;
   phone?: string;
@@ -74,6 +77,8 @@ interface ShelterResource {
   status?: string;
   capacity?: string;
   lastUpdated?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export default function Results() {
@@ -125,8 +130,12 @@ export default function Results() {
           // Enhance the data with additional fields needed for the UI
           const enhancedData = data.map((item: any) => ({
             ...item,
+            // ensure location uses address when available
+            location: item.address || item.location,
+            // description fallback
+            description: item.description ?? "No description available",
             type: resourceType,
-            distance: Math.random() * 5, // Mock distance for now
+            distance: Math.random() * 5,
             phone: "(512) 555-" + Math.floor(1000 + Math.random() * 9000),
             hours: "9:00 AM - 5:00 PM",
             status: Math.random() > 0.2 ? "open" : "closed",
@@ -137,7 +146,9 @@ export default function Results() {
               visualAlerts: item.visual_accommodations || Math.random() > 0.5,
               audioAlerts: item.audio_accommodations || Math.random() > 0.5,
               assistiveStaff: Math.random() > 0.4
-            }
+            },
+            latitude: item.gps_coordinates?.latitude,
+            longitude: item.gps_coordinates?.longitude,
           }));
 
           setResources(enhancedData);
@@ -161,7 +172,7 @@ export default function Results() {
             <div className="relative flex-1">
               <Input
                 className="pl-10 pr-4 py-2 w-full"
-                placeholder={`Search for ${resourceType || 'resources'}...`}
+                placeholder={`Search for ${resourceType || "resources"}...`}
               />
               <Search className="absolute left-3 top-2 h-5 w-5 text-slate-400" />
             </div>
@@ -203,7 +214,7 @@ export default function Results() {
             <TabsContent value="list" className="flex-1 overflow-auto">
               <div className="p-4">
                 <h2 className="text-lg font-medium mb-4">
-                  {`${resourceType || 'Resources'} in ZIP Code ${zipCode}`}
+                  {`${resourceType || "Resources"} in ZIP Code ${zipCode}`}
                 </h2>
 
                 {loading ? (
@@ -223,7 +234,11 @@ export default function Results() {
                     {resources.map((resource) => (
                       <Card
                         key={resource.id}
-                        className={`cursor-pointer transition hover:shadow ${selectedResource?.id === resource.id ? 'border-blue-500 shadow-md' : ''}`}
+                        className={`cursor-pointer transition hover:shadow ${
+                          selectedResource?.id === resource.id
+                            ? "border-blue-500 shadow-md"
+                            : ""
+                        }`}
                         onClick={() => setSelectedResource(resource)}
                       >
                         <CardContent className="p-4">
@@ -233,21 +248,48 @@ export default function Results() {
                                 {getResourceIcon(resource.type)}
                               </div>
                               <div>
-                                <h3 className="font-medium">{resource.name}</h3>
-                                <p className="text-sm text-slate-500">{resource.location}</p>
+                                <h3 className="font-medium">
+                                  {resource.name || "Unamed"}
+                                </h3>
+                                <p className="text-sm text-slate-500">
+                                  {resource.location}
+                                </p>
+                                <p className="text-sm text-slate-500">
+                                  lat: {resource.latitude}, long: {resource.longitude}
+                                </p>
                                 <div className="flex items-center gap-2 mt-2 text-sm">
                                   {resource.status && (
-                                    <Badge variant={resource.status === "open" ? "default" : "destructive"} className="bg-green-100 text-green-800 hover:bg-green-100">
-                                      {resource.status === "open" ? "Open" : "Closed"}
+                                    <Badge
+                                      variant={
+                                        resource.status === "open"
+                                          ? "default"
+                                          : "destructive"
+                                      }
+                                      className="bg-green-100 text-green-800 hover:bg-green-100"
+                                    >
+                                      {resource.status === "open"
+                                        ? "Open"
+                                        : "Closed"}
                                     </Badge>
                                   )}
-                                  {resource.distance && <span className="text-slate-500">{resource.distance.toFixed(1)} mi</span>}
-                                  {resource.capacity && <span className="text-slate-500">{resource.capacity}</span>}
+                                  {resource.distance && (
+                                    <span className="text-slate-500">
+                                      {resource.distance.toFixed(1)} mi
+                                    </span>
+                                  )}
+                                  {resource.capacity && (
+                                    <span className="text-slate-500">
+                                      {resource.capacity}
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="flex gap-2 mt-2">
-                                  {resource.accessibility?.wheelchair &&
-                                    <Wheelchair className="h-4 w-4 text-blue-600" aria-label="Wheelchair Accessible" />
-                                  }
+                                  {resource.accessibility?.wheelchair && (
+                                    <Wheelchair
+                                      className="h-4 w-4 text-blue-600"
+                                      aria-label="Wheelchair Accessible"
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -271,7 +313,9 @@ export default function Results() {
               ) : (
                 <div className="text-center p-8 text-slate-500">
                   <Info className="h-12 w-12 mx-auto mb-4 text-slate-300" />
-                  <h3 className="text-lg font-medium mb-2">No Resource Selected</h3>
+                  <h3 className="text-lg font-medium mb-2">
+                    No Resource Selected
+                  </h3>
                   <p>Select a resource from the list to view details</p>
                 </div>
               )}
