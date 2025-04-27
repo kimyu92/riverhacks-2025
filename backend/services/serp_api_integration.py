@@ -50,7 +50,7 @@ def search_resources_service(zipcode, resource_type):
 
     elif resource_type == "food":
         queries = [
-            f"Free food near {zipcode}",
+            f"Food banks near {zipcode}",
             f"Food donation centers near {zipcode}",
             f"Places offering free meals near {zipcode}"
         ]
