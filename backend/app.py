@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 from dotenv import load_dotenv
 from db import db
 from controllers import register_blueprints
@@ -17,6 +18,7 @@ app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 # Initialize extensions
 db.init_app(app)
 jwt = JWTManager(app)
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 # Register all blueprints
 register_blueprints(app)
