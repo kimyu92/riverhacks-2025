@@ -70,9 +70,8 @@ def seed_database():
     shelters = [
         Shelter(
             name="Downtown Emergency Shelter",
-            location="123 Main St, City Center",
-            title="Downtown Emergency Shelter",
             address="123 Main St, City Center",
+            title="Downtown Emergency Shelter",
             wheelchair_accessible=True,
             visual_accommodations=True,
             audio_accommodations=False,
@@ -87,9 +86,8 @@ def seed_database():
         ),
         Shelter(
             name="Westside Family Shelter",
-            location="456 West Ave, Westside",
-            title="Westside Family Shelter",
             address="456 West Ave, Westside",
+            title="Westside Family Shelter",
             wheelchair_accessible=True,
             visual_accommodations=False,
             audio_accommodations=True,
@@ -104,9 +102,8 @@ def seed_database():
         ),
         Shelter(
             name="Eastside Temporary Housing",
-            location="789 East Blvd, Eastside",
-            title="Eastside Temporary Housing",
             address="789 East Blvd, Eastside",
+            title="Eastside Temporary Housing",
             wheelchair_accessible=False,
             visual_accommodations=True,
             audio_accommodations=True,
@@ -121,9 +118,8 @@ def seed_database():
         ),
         Shelter(
             name="Austin Resource Center for the Homeless",
-            title="Austin Resource Center for the Homeless (ARCH)",
-            location="500 E 7th St, Austin, TX 78701",
             address="500 E 7th St, Austin, TX 78701",
+            title="Austin Resource Center for the Homeless (ARCH)",
             organization_id=redcross.id,
             phone="(512) 881-8951",
             website="https://communitycaretx.org/all-locations/austin-resource-center-for-the-homeless-clinic/",
@@ -139,9 +135,8 @@ def seed_database():
         ),
         Shelter(
             name="Casa Marianella",
-            title="Casa Marianella",
-            location="821 Gunter St, Austin, TX 78702",
             address="821 Gunter St, Austin, TX 78702",
+            title="Casa Marianella",
             organization_id=salvation_army.id,
             phone="(512) 385-5571",
             website="https://www.casamarianella.org/",

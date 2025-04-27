@@ -79,7 +79,7 @@ def create_shelter():
     # Create new shelter with all available fields
     shelter = Shelter(
         name=data.get('name'),
-        location=data.get('location'),
+        address=data.get('address'),
         wheelchair_accessible=data.get('wheelchair_accessible', False),
         visual_accommodations=data.get('visual_accommodations', False),
         audio_accommodations=data.get('audio_accommodations', False),
@@ -87,7 +87,6 @@ def create_shelter():
 
         # Additional fields from SERP API format
         title=data.get('title'),
-        address=data.get('address'),
         phone=data.get('phone'),
         website=data.get('website'),
         description=data.get('description'),
@@ -138,8 +137,8 @@ def update_shelter(shelter_id):
     # Update core fields if provided
     if 'name' in data:
         shelter.name = data['name']
-    if 'location' in data:
-        shelter.location = data['location']
+    if 'address' in data:
+        shelter.address = data['address']
     if 'wheelchair_accessible' in data:
         shelter.wheelchair_accessible = data['wheelchair_accessible']
     if 'visual_accommodations' in data:
@@ -150,8 +149,6 @@ def update_shelter(shelter_id):
     # Update additional SERP API fields if provided
     if 'title' in data:
         shelter.title = data['title']
-    if 'address' in data:
-        shelter.address = data['address']
     if 'phone' in data:
         shelter.phone = data['phone']
     if 'website' in data:

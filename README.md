@@ -148,7 +148,7 @@ curl -X POST http://localhost:8000/api/v1/shelters \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Emergency Relief Center",
-    "location": "123 Oak Street, Austin, TX 78701",
+    "address": "123 Oak Street, Austin, TX 78701",
     "wheelchair_accessible": true,
     "visual_accommodations": false,
     "audio_accommodations": true
@@ -179,14 +179,13 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     [
       {
         "id": 1,                  // Only present for database resources
-        "name": "Downtown Emergency Shelter", // Database field
-        "location": "123 Main St, Austin, TX", // Database field
+        "name": "Downtown Emergency Shelter", // Database/SERP field
+        "address": "123 Main St, Austin, TX", // Database field
         "organization_id": 2,     // Database field
         "wheelchair_accessible": true, // Database field
         "visual_accommodations": true, // Database field
         "audio_accommodations": false, // Database field
-        "title": "Downtown Emergency Shelter", // SERP API field
-        "address": "123 Main St, Austin, TX", // SERP API field
+        "title": "Downtown Emergency Shelter", //  API field
         "phone": "512-555-1234", // SERP API field (optional)
         "website": "https://shelter.org", // SERP API field (optional)
         "description": "Description of services", // SERP API field (optional)
@@ -207,13 +206,12 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     ```json
     {
       "name": "Central Emergency Shelter",
-      "location": "Austin, TX",
+      "address": "Austin, TX",
       "organization_id": 1,     // Optional, defaults to user's organization
       "wheelchair_accessible": true, // Optional
       "visual_accommodations": false, // Optional
       "audio_accommodations": true, // Optional
       "title": "Central Emergency Shelter", // Optional
-      "address": "456 Main St, Austin, TX", // Optional
       "phone": "512-555-6789", // Optional
       "website": "https://shelter.org", // Optional
       "description": "Open 24/7 with 50 beds", // Optional
@@ -233,7 +231,7 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     {
       "id": 3,
       "name": "Central Emergency Shelter",
-      "location": "Austin, TX",
+      "address": "Austin, TX",
       "organization_id": 1,
       "wheelchair_accessible": true,
       "visual_accommodations": false,
@@ -267,10 +265,9 @@ curl -X POST http://localhost:8000/api/v1/shelters \
       {
         "id": 1,                  // Only present for database resources
         "name": "Food Bank Name", // Database field
-        "location": "Austin, TX", // Database field
+        "address": "Austin, TX", // Database or SERP field
         "organization_id": 2,     // Database field
         "title": "Food Bank Name", // SERP API field
-        "address": "123 Main St, Austin, TX", // SERP API field
         "phone": "512-555-1234", // SERP API field (optional)
         "website": "https://foodbank.org", // SERP API field (optional)
         "description": "Description of services", // SERP API field (optional)
@@ -291,7 +288,7 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     ```json
     {
       "name": "Central Food Pantry",
-      "location": "Austin, TX",
+      "address": "Austin, TX",
       "organization_id": 1,     // Optional, defaults to user's organization
       "title": "Central Food Pantry", // Optional
       "address": "456 Main St, Austin, TX", // Optional
@@ -314,7 +311,7 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     {
       "id": 3,
       "name": "Central Food Pantry",
-      "location": "Austin, TX",
+      "address": "Austin, TX",
       "organization_id": 1,
       // Additional fields if provided
     }
