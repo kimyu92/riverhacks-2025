@@ -66,31 +66,94 @@ def seed_database():
     db.session.commit()
     print("Added users")
 
-    # Create shelters
+    # Create shelters with enhanced data to match SERP API format
     shelters = [
         Shelter(
             name="Downtown Emergency Shelter",
             location="123 Main St, City Center",
+            title="Downtown Emergency Shelter",
+            address="123 Main St, City Center",
             wheelchair_accessible=True,
             visual_accommodations=True,
             audio_accommodations=False,
-            organization_id=redcross.id
+            organization_id=redcross.id,
+            phone="555-123-4567",
+            website="https://downtownshelter.org",
+            description="Emergency shelter providing beds and basic services",
+            rating=4.5,
+            reviews=78,
+            latitude=30.2672,
+            longitude=-97.7431
         ),
         Shelter(
             name="Westside Family Shelter",
             location="456 West Ave, Westside",
+            title="Westside Family Shelter",
+            address="456 West Ave, Westside",
             wheelchair_accessible=True,
             visual_accommodations=False,
             audio_accommodations=True,
-            organization_id=salvation_army.id
+            organization_id=salvation_army.id,
+            phone="555-234-5678",
+            website="https://westsideshelter.org",
+            description="Family-oriented shelter with support services",
+            rating=4.2,
+            reviews=45,
+            latitude=30.2750,
+            longitude=-97.7566
         ),
         Shelter(
             name="Eastside Temporary Housing",
             location="789 East Blvd, Eastside",
+            title="Eastside Temporary Housing",
+            address="789 East Blvd, Eastside",
             wheelchair_accessible=False,
             visual_accommodations=True,
             audio_accommodations=True,
-            organization_id=habitat.id
+            organization_id=habitat.id,
+            phone="555-345-6789",
+            website="https://eastsidehousing.org",
+            description="Temporary housing solutions for those in transition",
+            rating=4.0,
+            reviews=32,
+            latitude=30.2550,
+            longitude=-97.7266
+        ),
+        Shelter(
+            name="Austin Resource Center for the Homeless",
+            title="Austin Resource Center for the Homeless (ARCH)",
+            location="500 E 7th St, Austin, TX 78701",
+            address="500 E 7th St, Austin, TX 78701",
+            organization_id=redcross.id,
+            phone="(512) 881-8951",
+            website="https://communitycaretx.org/all-locations/austin-resource-center-for-the-homeless-clinic/",
+            description="They help feed families by sending the food to schools in and around austin.",
+            place_id="ChIJPXBW86a1RIYRLHKKgjK4Nf0",
+            rating=3.5,
+            reviews=243,
+            wheelchair_accessible=True,
+            visual_accommodations=False,
+            audio_accommodations=True,
+            latitude=30.2677651,
+            longitude=-97.73759749999999
+        ),
+        Shelter(
+            name="Casa Marianella",
+            title="Casa Marianella",
+            location="821 Gunter St, Austin, TX 78702",
+            address="821 Gunter St, Austin, TX 78702",
+            organization_id=salvation_army.id,
+            phone="(512) 385-5571",
+            website="https://www.casamarianella.org/",
+            description="The great place for immigrants to live great shelter",
+            place_id="ChIJsdFZNNS1RIYRbVRMVJwnaGc",
+            rating=4.6,
+            reviews=213,
+            wheelchair_accessible=True,
+            visual_accommodations=True,
+            audio_accommodations=True,
+            latitude=30.2598715,
+            longitude=-97.7010093
         ),
     ]
     db.session.add_all(shelters)
