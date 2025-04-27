@@ -32,8 +32,7 @@ def extract_fields(place):
         "website": place.get("website"),
         "directions": place.get("directions"),
         "phone": place.get("phone"),
-        "description": place.get("description"),
-        "data_source": "SERP"
+        "description": place.get("description")
     }
 
 
