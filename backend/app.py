@@ -5,6 +5,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from db import db
 from controllers import register_blueprints
+from datetime import timedelta
 
 load_dotenv()
 
@@ -12,12 +13,35 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://hackuser:hackpass@db:5432/hacksafety')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super-secret')
+# Set token to expire after 24 hours
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 # Enable debug mode by default
 app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
 # Initialize extensions
 db.init_app(app)
 jwt = JWTManager(app)
+
+# JWT error handlers
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    print(f"Expired token: {jwt_payload}")
+    return jsonify({"message": "The token has expired", "error": "token_expired"}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    print(f"Invalid token error: {error}")
+    return jsonify({"message": "Signature verification failed", "error": "invalid_token"}), 401
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    print(f"Missing token error: {error}")
+    return jsonify({"message": "Request does not contain an access token", "error": "authorization_required"}), 401
+
+@jwt.needs_fresh_token_loader
+def token_not_fresh_callback(jwt_header, jwt_payload):
+    return jsonify({"message": "The token is not fresh", "error": "fresh_token_required"}), 401
+
 CORS(
   app,
   supports_credentials=True,

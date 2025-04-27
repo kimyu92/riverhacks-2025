@@ -1,25 +1,19 @@
 import { Link } from "react-router-dom";
-import { Menu, MapPin, Map, Info, LogIn, User } from "lucide-react";
+import { Menu, MapPin, Map, Info, LogIn, User, Building } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { useUserStore } from "../../stores/useUserStore";
 
 interface HeaderProps {
   isOffline: boolean;
   setIsOffline: (value: boolean) => void;
 }
 
-// Mock user store until we implement the real one
-const useUserStore = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  return {
-    isAuthenticated,
-    logout: () => setIsAuthenticated(false)
-  };
-};
-
 export default function Header({ isOffline, setIsOffline }: HeaderProps) {
-  const { isAuthenticated, logout } = useUserStore();
+  const { user, isAuthenticated, logout } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const isAdmin = isAuthenticated && user?.role === "admin";
 
   return (
     <header className="sticky top-0 z-10 bg-white shadow-sm w-full">
@@ -76,16 +70,33 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
                       <span>Home</span>
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/map"
-                      className="flex items-center gap-2 p-2 bg-blue-50 text-blue-700 rounded-md"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <Map className="h-5 w-5" />
-                      <span>Map View</span>
-                    </Link>
-                  </li>
+
+                  {isAuthenticated && (
+                    <li>
+                      <Link
+                        to="/dashboard"
+                        className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <User className="h-5 w-5" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </li>
+                  )}
+
+                  {isAdmin && (
+                    <li>
+                      <Link
+                        to="/organizations"
+                        className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <Building className="h-5 w-5" />
+                        <span>Organizations</span>
+                      </Link>
+                    </li>
+                  )}
+
                   {isAuthenticated && (
                     <li>
                       <Link
@@ -98,6 +109,7 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
                       </Link>
                     </li>
                   )}
+
                   {isAuthenticated ? (
                     <li>
                       <Link
@@ -121,6 +133,7 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
                       </Link>
                     </li>
                   )}
+
                   {isAuthenticated && (
                     <li>
                       <button

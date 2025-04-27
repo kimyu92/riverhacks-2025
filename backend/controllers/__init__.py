@@ -11,6 +11,7 @@ def register_blueprints(app):
     from controllers.hospitals import hospitals_bp
     from controllers.chatbot import chatbot_bp
     from controllers.cooling_stations import cooling_bp
+    from controllers.organizations import organizations_bp
 
     # Register all blueprints
     app.register_blueprint(users_bp, url_prefix='/api/v1')
@@ -20,3 +21,4 @@ def register_blueprints(app):
     app.register_blueprint(hospitals_bp, url_prefix='/api/v1')
     app.register_blueprint(chatbot_bp, url_prefix='/api/v1')
     app.register_blueprint(cooling_bp, url_prefix='/api/v1')
+    app.register_blueprint(organizations_bp, url_prefix='/api/v1')

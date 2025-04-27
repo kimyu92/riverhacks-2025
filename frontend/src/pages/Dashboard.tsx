@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useUserStore } from '../stores/useUserStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { MapPin, Info, Calendar, Bell, LogOut } from 'lucide-react';
+import { MapPin, Info, Calendar, Bell, LogOut, Building, Users } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -18,6 +18,9 @@ export default function Dashboard() {
     if (!isAuthenticated) {
       navigate('/login');
     }
+
+    // Remove the auto-redirect for admin users
+    // Let them stay on the dashboard and provide links instead
   }, [isAuthenticated, navigate]);
 
   // Show loading state while checking authentication
@@ -99,6 +102,35 @@ export default function Dashboard() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Admin Management Section */}
+            {user?.role === 'admin' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Administration</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Link to="/organizations" className="w-full">
+                      <Button
+                        variant="outline"
+                        className="h-24 flex flex-col w-full"
+                      >
+                        <Building className="h-6 w-6 mb-2" />
+                        <span>Manage Organizations</span>
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      className="h-24 flex flex-col"
+                    >
+                      <Users className="h-6 w-6 mb-2" />
+                      <span>Manage Users</span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Quick Actions */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
