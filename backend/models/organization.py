@@ -8,4 +8,8 @@ class Organization(db.Model):
   foods = db.relationship('FoodResource', backref='organization', lazy=True)
 
   def to_dict(self):
-    return {'id': self.id, 'name': self.name}
+    return {
+      'id': self.id,
+      'name': self.name,
+      'volunteers': [volunteer.to_dict() for volunteer in self.volunteers] if self.volunteers else []
+    }

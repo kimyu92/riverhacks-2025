@@ -35,15 +35,15 @@ export default function Organizations() {
       navigate('/login');
       return;
     }
-    
+
     const fetchOrganizations = async () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Debug: log the token being used for the request
         console.log('Fetching organizations with token:', getToken());
-        
+
         // Use the configured axiosInstance that handles token automatically
         const response = await axiosInstance.get('/api/v1/organizations');
         console.log('Organizations response:', response.data);
@@ -52,9 +52,9 @@ export default function Organizations() {
         console.error('Error fetching organizations:', err);
         const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
         const errorDetails = JSON.stringify(err.response?.data || {});
-        
+
         setError(`Error: ${errorMessage} (${errorDetails})`);
-        
+
         // Handle specific error cases
         if (err.response?.status === 401) {
           setError(`Authentication failed (401): ${errorMessage}. Please log in again.`);
@@ -73,7 +73,7 @@ export default function Organizations() {
         <div className="text-center">
           <h2 className="text-xl font-semibold">Authentication Required</h2>
           <p className="mt-2">Please log in to access this page</p>
-          <Button 
+          <Button
             onClick={() => navigate('/login')}
             className="mt-4"
           >
@@ -112,7 +112,7 @@ export default function Organizations() {
               <p>Token Available: {accessToken ? 'Yes' : 'No'}</p>
               <p>Auth State: {isAuthenticated ? 'Authenticated' : 'Not authenticated'}</p>
             </div>
-            
+
             {loading ? (
               <div className="flex justify-center my-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -122,9 +122,9 @@ export default function Organizations() {
                 <p className="font-semibold">Error loading organizations:</p>
                 <p className="mt-1">{error}</p>
                 <div className="mt-4 flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => {
                       setError(null);
                       setLoading(true);
@@ -182,7 +182,10 @@ export default function Organizations() {
                               {org.volunteers.length}
                             </span>
                           ) : (
-                            "Loading..."
+                            <span className="inline-flex items-center">
+                              <User className="h-4 w-4 mr-1" />
+                              0
+                            </span>
                           )}
                         </TableCell>
                         <TableCell className="text-right space-x-1">
