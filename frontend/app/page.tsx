@@ -1,41 +1,68 @@
-// pages/index.js
+'use client'
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, AlertCircle, MessageSquare, Bell, Menu, Search, Accessibility, Server } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
+  const [activeBadge, setActiveBadge] = useState<string | null>('Shelters');
+  const [zipCode, setZipCode] = useState("");
+
+  const handleBadgeClick = (badge: string) => {
+    setActiveBadge(badge);
+  };
+
+  const handleSearch = () => {
+    console.log("Searching for resources in ZIP code:", zipCode);
+    // Add search logic here
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
-      test
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-blue-600 to-blue-800 text-white py-12 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-4">Find Safe & Accessible Emergency Resources</h2>
-          <p className="text-lg mb-8">
+          <p className="text-lg mb-4">
             Quickly locate wheelchair accessible evacuation centers, cooling stations, and more around Austin
           </p>
 
-          <div className="relative mb-8">
+          {/* Badges */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {["Shelters", "Cooling Centers", "Food Banks"].map((badge) => (
+                <Badge
+                    key={badge}
+                    onClick={() => handleBadgeClick(badge)}
+                    className={`cursor-pointer px-6 py-3 text-lg rounded-full ${
+                        activeBadge === badge
+                            ? "bg-blue-600 text-white"
+                            : "bg-white text-blue-800 hover:bg-blue-50"
+                    }`}
+                >
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+          {/* Search Bar */}
+          <div className="relative mb-8 max-w-md mx-auto">
             <Input
-              className="pl-10 pr-4 py-6 rounded-full text-slate-800 shadow-lg"
-              placeholder="Search for resources near you..."
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+                className="pl-10 pr-4 py-6 rounded-full text-slate-800 shadow-lg text-white"
+                placeholder="Enter ZIP code..."
             />
             <Search className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
+            <Button
+                onClick={handleSearch}
+                className="cursor-pointer absolute right-3 top-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
+            >
+              Search
+            </Button>
           </div>
-
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            <Badge className="bg-white text-blue-800 hover:bg-blue-50 px-3 py-1">Shelters</Badge>
-            <Badge className="bg-white text-blue-800 hover:bg-blue-50 px-3 py-1">Cooling Centers</Badge>
-            <Badge className="bg-white text-blue-800 hover:bg-blue-50 px-3 py-1">Hospitals</Badge>
-            <Badge className="bg-white text-blue-800 hover:bg-blue-50 px-3 py-1">Evacuation Routes</Badge>
-          </div>
-
-          <Button className="bg-red-500 hover:bg-red-600 text-white font-bold py-6 px-8 rounded-full shadow-lg">
-            Find Nearby Resources
-          </Button>
         </div>
       </section>
 
