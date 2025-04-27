@@ -3,6 +3,8 @@
 ## 🚀 Description
 ToSafeToBee is a unified platform designed to connect people in need — especially the homeless — with NGOs, shelters, food banks, healthcare services, and local support organizations around them.
 
+## 📊 Presentation
+[View our project presentation slides](https://docs.google.com/presentation/d/1wibzWn21o9N1-8qEeyu0VVIQDKCIOaI5oY1RA4UjlOc/edit?usp=sharing)
 
 ### Key Features
 
