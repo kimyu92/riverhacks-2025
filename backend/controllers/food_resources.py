@@ -58,12 +58,30 @@ def create_food_resource():
 
     data = request.get_json()
 
+    # Create new food resource with all potential fields from request
     food_resource = FoodResource(
         name=data.get('name'),
         location=data.get('location'),
-        organization_id=data.get(
-            'organization_id', current_user.organization_id)
+        organization_id=data.get('organization_id', current_user.organization_id),
+        title=data.get('title'),
+        address=data.get('address'),
+        phone=data.get('phone'),
+        website=data.get('website'),
+        description=data.get('description'),
+        place_id=data.get('place_id'),
+        rating=data.get('rating'),
+        reviews=data.get('reviews'),
+        directions=data.get('directions')
     )
+
+    # Add GPS coordinates if provided
+    if data.get('gps_coordinates'):
+        coords = data.get('gps_coordinates')
+        food_resource.latitude = coords.get('latitude')
+        food_resource.longitude = coords.get('longitude')
+    elif data.get('latitude') and data.get('longitude'):
+        food_resource.latitude = data.get('latitude')
+        food_resource.longitude = data.get('longitude')
 
     db.session.add(food_resource)
     db.session.commit()
@@ -91,10 +109,44 @@ def update_food_resource(resource_id):
     food_resource = FoodResource.query.get_or_404(resource_id)
     data = request.get_json()
 
+    # Update basic fields
     if 'name' in data:
         food_resource.name = data['name']
     if 'location' in data:
         food_resource.location = data['location']
+
+    # Update SERP API fields
+    if 'title' in data:
+        food_resource.title = data['title']
+    if 'address' in data:
+        food_resource.address = data['address']
+    if 'phone' in data:
+        food_resource.phone = data['phone']
+    if 'website' in data:
+        food_resource.website = data['website']
+    if 'description' in data:
+        food_resource.description = data['description']
+    if 'place_id' in data:
+        food_resource.place_id = data['place_id']
+    if 'rating' in data:
+        food_resource.rating = data['rating']
+    if 'reviews' in data:
+        food_resource.reviews = data['reviews']
+    if 'directions' in data:
+        food_resource.directions = data['directions']
+
+    # Update GPS coordinates
+    if 'gps_coordinates' in data:
+        coords = data['gps_coordinates']
+        if coords and 'latitude' in coords and 'longitude' in coords:
+            food_resource.latitude = coords['latitude']
+            food_resource.longitude = coords['longitude']
+    else:
+        # Direct latitude/longitude fields
+        if 'latitude' in data:
+            food_resource.latitude = data['latitude']
+        if 'longitude' in data:
+            food_resource.longitude = data['longitude']
 
     db.session.commit()
 
