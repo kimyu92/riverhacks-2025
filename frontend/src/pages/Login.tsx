@@ -1,6 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../lib/axios';
+import { useUserStore } from '../stores/useUserStore';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const login = useUserStore((state) => state.login);
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await axiosInstance.post('/api/v1/login', formData);
+
+      if (response.data && response.data.access_token) {
+        // Use Zustand store to manage authentication state
+        login(response.data.user, response.data.access_token);
+
+        // Redirect to dashboard
+        navigate('/dashboard');
+      } else {
+        setError('Invalid response from server');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-md">
@@ -9,16 +50,24 @@ export default function Login() {
           <p className="mt-2 text-gray-600">Access your account to get personalized emergency resources</p>
         </div>
 
-        <form className="mt-8 space-y-6">
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+            {error}
+          </div>
+        )}
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <input
-              id="email"
-              name="email"
-              type="email"
+              id="username"
+              name="username"
+              type="text"
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
+              value={formData.username}
+              onChange={handleChange}
             />
           </div>
 
@@ -31,15 +80,18 @@ export default function Login() {
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
               placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
 
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+              disabled={isLoading}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400"
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
         </form>

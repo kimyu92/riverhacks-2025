@@ -8,6 +8,7 @@ const Login = lazy(() => import('./pages/Login'))
 const Chat = lazy(() => import('./pages/Chat'))
 const Map = lazy(() => import('./pages/Map'))
 const Results = lazy(() => import('./pages/Results'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 function App() {
   return (
@@ -17,9 +18,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/results" element={<Results />} />
+
           <Route path="/chat" element={<Chat />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/results" element={<Results />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Suspense>
     </>
