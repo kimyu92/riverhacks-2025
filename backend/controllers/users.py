@@ -6,7 +6,7 @@ from db import db
 
 users_bp = Blueprint("users", __name__)
 
-@users_bp.route("/api/v1/login", methods=["POST"])
+@users_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
     print(f"Login data: {data}")
@@ -17,7 +17,7 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 200
 
-@users_bp.route("/api/v1/logout", methods=["POST"])
+@users_bp.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
     # In a token-based authentication system like JWT,
@@ -25,7 +25,7 @@ def logout():
     # The client should discard the token on their side
     return jsonify({"message": "Logged out successfully"}), 200
 
-@users_bp.route("/api/v1/users", methods=["POST"])
+@users_bp.route("/users", methods=["POST"])
 def create_user():
     data = request.get_json()
 
@@ -46,13 +46,13 @@ def create_user():
 
     return jsonify({"message": "User created successfully", "user": user.to_dict()}), 201
 
-@users_bp.route("/api/v1/users/<int:user_id>", methods=["GET"])
+@users_bp.route("/users/<int:user_id>", methods=["GET"])
 @jwt_required()
 def get_user(user_id):
     user = User.query.get_or_404(user_id)
     return jsonify(user.to_dict()), 200
 
-@users_bp.route("/api/v1/users/<int:user_id>", methods=["PUT"])
+@users_bp.route("/users/<int:user_id>", methods=["PUT"])
 @jwt_required()
 def update_user(user_id):
     # Ensure user can only update their own profile unless they're admin
@@ -89,7 +89,7 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"message": "User updated successfully", "user": user.to_dict()}), 200
 
-@users_bp.route("/api/v1/users/<int:user_id>", methods=["DELETE"])
+@users_bp.route("/users/<int:user_id>", methods=["DELETE"])
 @jwt_required()
 def delete_user(user_id):
     # Only admins or the user themselves can delete their account
