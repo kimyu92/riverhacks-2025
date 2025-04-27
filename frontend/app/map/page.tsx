@@ -204,8 +204,8 @@ export default function MapPage() {
         <div className="container">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Input 
-                className="pl-10 pr-4 py-2 w-full" 
+              <Input
+                className="pl-10 pr-4 py-2 w-full"
                 placeholder="Search for resources..."
               />
               <Search className="absolute left-3 top-2 h-5 w-5 text-slate-400" />
@@ -236,7 +236,7 @@ export default function MapPage() {
                           </div>
                           <div className="flex items-center">
                             <Checkbox id="cooling" defaultChecked />
-                            <label htmlFor="cooling" className="ml-2">Cooling Centers</label>
+                            <label htmlFor="cooling" className="ml-2">Cooling Stations</label>
                           </div>
                           <div className="flex items-center">
                             <Checkbox id="hospital" defaultChecked />
@@ -330,7 +330,7 @@ export default function MapPage() {
             <TabsContent value="list" className="flex-1 overflow-auto">
               <div className="p-4">
                 <h2 className="text-lg font-medium mb-4">Nearby Resources</h2>
-                
+
                 {loading ? (
                   <div className="flex flex-col gap-4">
                     {[1, 2, 3].map((i) => (
@@ -346,8 +346,8 @@ export default function MapPage() {
                 ) : (
                   <div className="flex flex-col gap-4">
                     {resources.map((resource) => (
-                      <Card 
-                        key={resource.id} 
+                      <Card
+                        key={resource.id}
                         className={`cursor-pointer transition hover:shadow ${selectedResource?.id === resource.id ? 'border-blue-500 shadow-md' : ''}`}
                         onClick={() => setSelectedResource(resource)}
                       >
@@ -368,7 +368,7 @@ export default function MapPage() {
                                   <span className="text-slate-500">{resource.capacity}</span>
                                 </div>
                                 <div className="flex gap-2 mt-2">
-                                  {resource.accessibility.wheelchair && 
+                                  {resource.accessibility.wheelchair &&
                                     <Wheelchair className="h-4 w-4 text-blue-600" title="Wheelchair Accessible" />
                                   }
                                 </div>
