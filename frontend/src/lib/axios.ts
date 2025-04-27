@@ -25,10 +25,8 @@ axiosInstance.interceptors.request.use(
       config.headers = config.headers || {};
 
       // Set the Authorization header with the Bearer token
-      config.headers.Authorization = `Bearer ${token}`;
-
-      // Log the headers being sent
-      console.log('Request headers:', config.headers);
+      // Make sure there's a space between Bearer and the token
+      config.headers.Authorization = `Bearer ${token.trim()}`;
     } else {
       console.warn('No token found in store');
     }
@@ -43,8 +41,6 @@ axiosInstance.interceptors.request.use(
 // Response interceptor for handling common errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    // Log successful responses for debugging
-    console.log(`Response from ${response.config.url}:`, response.status);
     return response;
   },
   (error) => {
@@ -53,15 +49,10 @@ axiosInstance.interceptors.response.use(
 
     // Handle 401 (Unauthorized) responses
     if (error.response && error.response.status === 401) {
-      console.log('Authentication error, logging out');
-      // Call logout from the store instead of manually removing from localStorage
-      useUserStore.getState().logout();
-      window.location.href = '/login';
-    }
-
-    // Handle 422 (Unprocessable Entity) responses
-    if (error.response && error.response.status === 422) {
-      console.error('Validation error:', error.response.data);
+      console.log('Authentication error:', error.response.data);
+      // Don't automatically logout - this allows for debugging
+      // useUserStore.getState().logout();
+      // window.location.href = '/login';
     }
 
     return Promise.reject(error);

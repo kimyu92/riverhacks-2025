@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../lib/axios';
 import { useUserStore } from '../stores/useUserStore';
@@ -6,12 +6,20 @@ import { useUserStore } from '../stores/useUserStore';
 export default function Login() {
   const navigate = useNavigate();
   const login = useUserStore((state) => state.login);
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // If user is already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,15 +35,21 @@ export default function Login() {
       const response = await axiosInstance.post('/api/v1/login', formData);
 
       if (response.data && response.data.access_token) {
+        console.log('Login successful, token received:', response.data.access_token);
+        
         // Use Zustand store to manage authentication state
         login(response.data.user, response.data.access_token);
 
-        // Redirect to dashboard
-        navigate('/dashboard');
+        // Wait a moment to ensure the store is updated before navigating
+        setTimeout(() => {
+          // Redirect to dashboard
+          navigate('/dashboard');
+        }, 100);
       } else {
         setError('Invalid response from server');
       }
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
