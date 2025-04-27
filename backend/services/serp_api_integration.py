@@ -22,6 +22,10 @@ def search_serpapi(zipcode, query, engine):
 
 
 def extract_fields(place):
+    # Skip places without an address
+    if not place.get("address"):
+        return None
+        
     return {
         "title": place.get("title"),
         "address": place.get("address"),
@@ -65,13 +69,14 @@ def search_resources_service(zipcode, resource_type):
             search_result = search_serpapi(zipcode, query, engine)
             if search_result and "local_results" in search_result:
                 for place in search_result["local_results"]:
-                    if isinstance(place, dict):
+                    if isinstance(place, dict) and place.get("address"):  # Skip places without address
                         place_info = extract_fields(place)
-                        place_id = place_info.get("place_id")
-                        if place_id and place_id not in combined_results:
-                            combined_results[place_id] = place_info
+                        if place_info:  # Additional check in case extract_fields returns None
+                            place_id = place_info.get("place_id")
+                            if place_id and place_id not in combined_results:
+                                combined_results[place_id] = place_info
                     else:
-                        print("Skipping non-dict place:", place)
+                        print("Skipping place without address or non-dict place:", place)
 
     print("combined_results", combined_results)
 
