@@ -7,18 +7,30 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, AlertCircle, MessageSquare, Bell, Menu, Search, Accessibility, Server } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [activeBadge, setActiveBadge] = useState<string | null>('Shelters');
   const [zipCode, setZipCode] = useState("");
+  const router = useRouter();
 
   const handleBadgeClick = (badge: string) => {
     setActiveBadge(badge);
   };
 
   const handleSearch = () => {
-    console.log("Searching for resources in ZIP code:", zipCode);
-    // Add search logic here
+    if (!zipCode) {
+      alert("Please enter a ZIP code.");
+      return;
+    }
+  
+    // Validate ZIP code to ensure it is exactly 5 digits
+    const zipCodeRegex = /^\d{5}$/;
+    if (!zipCodeRegex.test(zipCode)) {
+      alert("Please enter a valid 5-digit ZIP code.");
+      return;
+    }
+    router.push(`/results?resourceType=${activeBadge}&zipCode=${zipCode}`);
   };
 
   return (
@@ -28,8 +40,8 @@ export default function Home() {
         <div className="container mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-4">Find Safe & Accessible Emergency Resources</h2>
           <p className="text-lg mb-4">
-            Quickly locate wheelchair accessible evacuation centers, cooling stations, and more around Austin
-          </p>
+            Quickly locate wheelchair accessible evacuation centers, cooling stations, and more around Austin</p>
+             <p className="text-sm text-slate-200 mb-4">Select your resource type:</p> 
 
           {/* Badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -50,6 +62,7 @@ export default function Home() {
           {/* Search Bar */}
           <div className="relative mb-8 max-w-md mx-auto">
             <Input
+                type="number"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 className="pl-10 pr-4 py-6 rounded-full text-slate-800 shadow-lg text-white"
