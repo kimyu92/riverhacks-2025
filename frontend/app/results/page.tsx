@@ -210,7 +210,7 @@ export default function Results() {
     <div className="flex flex-col h-screen">
       {/* Search Bar */}
       <div className="bg-white p-4 shadow-sm">
-        <div className="container">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Input
@@ -233,37 +233,39 @@ export default function Results() {
         style={{ height: "calc(100vh - 150px)" }}
       >
         {/* Map Section */}
-        <div className="flex-1 p-4 flex flex-col h-full">
-          <div className="relative flex-1" style={{ minHeight: 0 }}>
-            <MapContainer
-              center={mapCenter}
-              maxBounds={maxBounds}
-              zoom={13}
-              scrollWheelZoom={false}
-              className="w-full h-full"
-              style={{ height: "100%", minHeight: "350px" }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              {resources.map((res) =>
-                res.latitude && res.longitude ? (
-                  <Marker
-                    icon={IconMarker}
-                    key={res.id}
-                    position={[res.latitude, res.longitude]}
-                  >
-                    <Popup>
-                      <div>
-                        <h3 className="font-medium">{res.name}</h3>
-                        <p className="text-sm">{res.location}</p>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ) : null
-              )}
-            </MapContainer>
+        <div className="flex-1 flex flex-col h-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col w-full">
+            <div className="relative flex-1" style={{ minHeight: 0 }}>
+              <MapContainer
+                center={mapCenter}
+                maxBounds={maxBounds}
+                zoom={13}
+                scrollWheelZoom={false}
+                className="w-full h-full"
+                style={{ height: "100%", minHeight: "350px" }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {resources.map((res) =>
+                  res.latitude && res.longitude ? (
+                    <Marker
+                      icon={IconMarker}
+                      key={res.id}
+                      position={[res.latitude, res.longitude]}
+                    >
+                      <Popup>
+                        <div>
+                          <h3 className="font-medium">{res.name}</h3>
+                          <p className="text-sm">{res.location}</p>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ) : null
+                )}
+              </MapContainer>
+            </div>
           </div>
         </div>
 
