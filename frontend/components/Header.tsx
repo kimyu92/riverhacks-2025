@@ -27,10 +27,10 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
             <div className="h-10 flex items-center">
               <Image
                 src="/logo_with_text.png"
-                alt="SafeAccessATX Logo"
+                alt="ToSafeToBee Logo"
                 width={180}
                 height={80}
-                style={{ height: '80px', width: 'auto' }}
+                style={{ height: "80px", width: "auto" }}
               />
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
               <SheetDescription>
-                SafeAccessATX Emergency Resources
+                ToSafeToBee Emergency Resources
               </SheetDescription>
             </SheetHeader>
             <div className="mt-6 space-y-4">
