@@ -51,7 +51,7 @@ export default function Home() {
 
           {/* Badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {["Shelters", "Cooling Centers", "Food Banks"].map((badge) => (
+            {["Shelters", "Food Banks", "Cooling Stations"].map((badge) => (
               <Badge
                 key={badge}
                 onClick={() => handleBadgeClick(badge)}

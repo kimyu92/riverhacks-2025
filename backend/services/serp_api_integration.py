@@ -25,7 +25,7 @@ def extract_fields(place):
     # Skip places without an address
     if not place.get("address"):
         return None
-        
+
     return {
         "title": place.get("title"),
         "address": place.get("address"),
@@ -58,8 +58,15 @@ def search_resources_service(zipcode, resource_type):
             f"Food donation centers near {zipcode}",
             f"Places offering free meals near {zipcode}"
         ]
+    elif resource_type == "cooling":
+        # Queries for cooling stations
+        queries = [
+            f"Cooling centers near {zipcode}",
+            f"Cooling stations near {zipcode}",
+            f"Heat relief centers near {zipcode}"
+        ]
     else:
-        raise ValueError("Invalid resource_type. Must be 'shelter' or 'food'.")
+        raise ValueError("Invalid resource_type. Must be 'shelter', 'food', or 'cooling'.")
 
     print("resource_type", resource_type)
     combined_results = {}

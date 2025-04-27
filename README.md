@@ -331,6 +331,59 @@ curl -X POST http://localhost:8000/api/v1/shelters \
     }
     ```
 
+### Cooling Stations
+- `GET /api/v1/cooling-stations` - List all cooling stations
+  - Query Parameters:
+    - `zipcode` (optional): Filter by ZIP code for SERP API results
+    - `source` (optional): Data source to query – `db`, `serp`, or `all` (default: `all`)
+  - Response: Array of cooling station objects, for example:
+    ```json
+    [
+      {
+        "id": 1,
+        "name": "Downtown Cooling Center",
+        "location": "123 Main St, Austin, TX",
+        "organization_id": 2,
+        "title": "Downtown Cooling Center",
+        "phone": "512-555-1234",
+        "website": "https://coolingcenter.org",
+        "description": "Provides relief during heat waves",
+        "place_id": "place123",
+        "rating": 4.2,
+        "reviews": 48,
+        "directions": "https://maps.google.com/...",
+        "gps_coordinates": { "latitude": 30.2672, "longitude": -97.7431 },
+        "source": "database"
+      }
+    ]
+    ```
+- `POST /api/v1/cooling-stations` – Add a new cooling station (admin/volunteer)
+  - **Request Body**:
+    ```json
+    {
+      "name": "Central Cooling Station",
+      "location": "456 Elm St, Austin, TX",
+      "organization_id": 1,            // Optional, defaults to user's org
+      "title": "Central Cooling Station",
+      "address": "456 Elm St, Austin, TX",
+      "phone": "512-555-6789",
+      "website": "https://cooling.org",
+      "description": "Open during summer heat",
+      "place_id": "place456",
+      "rating": 4.7,
+      "reviews": 32,
+      "directions": "https://maps.google.com/...",
+      "gps_coordinates": { "latitude": 30.2672, "longitude": -97.7431 }
+      // Or use separate "latitude" and "longitude" fields
+    }
+    ```
+  - **Response**: Created cooling station object (HTTP 201)
+- `GET /api/v1/cooling-stations/<id>` – Get details for a specific cooling station
+- `PUT /api/v1/cooling-stations/<id>` – Update cooling station (admin/volunteer)
+  - **Request Body**: Same as POST, include only fields to change
+- `DELETE /api/v1/cooling-stations/<id>` – Remove a cooling station (admin only)
+  - **Response**: Confirmation message
+
 ### Safety Reports
 - `GET /api/v1/safety-reports` - List all safety reports with optional filters
 - `POST /api/v1/safety-reports` - Submit a new safety report (authentication optional)

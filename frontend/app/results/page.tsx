@@ -111,7 +111,7 @@ export default function Results() {
   // Get appropriate resource icon based on type
   const getResourceIcon = (type: string) => {
     switch(type) {
-      case "Cooling Centers":
+      case "Cooling Stations":
         return <Thermometer className="h-5 w-5 text-blue-500" />;
       case "Shelters":
         return <Buildings className="h-5 w-5 text-green-500" />;
@@ -136,8 +136,8 @@ export default function Results() {
           url = `http://localhost:8000/api/v1/food-resources?zipcode=${zipCode}`;
         } else if (resourceType === 'Shelters') {
           url = `http://localhost:8000/api/v1/shelters?zipcode=${zipCode}`;
-        } else if (resourceType === 'Cooling Centers') {
-          url = `http://localhost:8000/api/v1/cooling-centers?zipcode=${zipCode}`; // This endpoint might need to be created
+        } else if (resourceType === 'Cooling Stations') {
+          url = `http://localhost:8000/api/v1/cooling-stations?zipcode=${zipCode}`;
         }
 
         if (url) {
