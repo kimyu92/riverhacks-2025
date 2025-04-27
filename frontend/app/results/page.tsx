@@ -1,8 +1,9 @@
 'use client';
 
+import 'leaflet/dist/leaflet.css';
+
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import 'leaflet/dist/leaflet.css';                                     // add
+import { useSearchParams } from 'next/navigation';                               // add
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'; // add
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import MapPlaceholder from "../map/components/MapPlaceholder";
 import ResourceDetails from "../map/components/ResourceDetails";
+import { icon } from 'leaflet';
 
 interface FoodResource {
   id: number;
@@ -82,6 +84,19 @@ interface ShelterResource {
   latitude?: number;
   longitude?: number;
 }
+
+const sizeMarkerIcon = 50;
+
+const IconMarker = icon({
+  iconUrl: `data:image/svg+xml;utf8,${encodeURIComponent(`<?xml version="1.0" encoding="iso-8859-1"?>
+  <svg xmlns="http://www.w3.org/2000/svg" width="0.67em" height="1em" viewBox="0 0 1024 1536">
+    <path fill="#38A054CC" d="M768 512q0-106-75-181t-181-75t-181 75t-75 181t75 181t181 75t181-75t75-181m256 0q0 109-33 179l-364 774q-16 33-47.5 52t-67.5 19t-67.5-19t-46.5-52L33 691Q0 621 0 512q0-212 150-362T512 0t362 150t150 362" />
+  </svg>
+`)}`,
+  iconSize: [sizeMarkerIcon, sizeMarkerIcon],
+  iconAnchor: [sizeMarkerIcon / 2, sizeMarkerIcon],
+  popupAnchor: [0, -sizeMarkerIcon],
+});
 
 export default function Results() {
   const searchParams = useSearchParams();
@@ -169,7 +184,26 @@ export default function Results() {
   const mapCenter: [number, number] =
     resources.length > 0 && resources[0].latitude && resources[0].longitude
       ? [resources[0].latitude, resources[0].longitude]
-      : [51.505, -0.09]; // default
+      : [51.505, -0.09];
+
+  // compute map bounds based on available coords
+  const coords = resources.filter(r => r.latitude != null && r.longitude != null);
+  const maxBounds: [[number, number], [number, number]] =
+    coords.length > 0
+      ? [
+          [
+            Math.min(...coords.map((r) => r.latitude!)),
+            Math.min(...coords.map((r) => r.longitude!)),
+          ],
+          [
+            Math.max(...coords.map((r) => r.latitude!)),
+            Math.max(...coords.map((r) => r.longitude!)),
+          ],
+        ]
+      : [
+          [30.14455, -97.89678],
+          [30.5936, -97.61771],
+        ];
 
   return (
     <div className="flex flex-col h-screen">
@@ -193,16 +227,20 @@ export default function Results() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col md:flex-row">
+      <div
+        className="flex-1 flex flex-col md:flex-row overflow-hidden"
+        style={{ height: "calc(100vh - 150px)" }}
+      >
         {/* Map Section */}
-        <div className="flex-1 p-4">
-          <div className="h-full">
-            {/* remove MapPlaceholder */}
+        <div className="flex-1 p-4 flex flex-col h-full">
+          <div className="relative flex-1" style={{ minHeight: 0 }}>
             <MapContainer
               center={mapCenter}
+              maxBounds={maxBounds}
               zoom={13}
               scrollWheelZoom={false}
-              className="h-full w-full"
+              className="w-full h-full"
+              style={{ height: "100%", minHeight: "350px" }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -211,6 +249,7 @@ export default function Results() {
               {resources.map((res) =>
                 res.latitude && res.longitude ? (
                   <Marker
+                    icon={IconMarker}
                     key={res.id}
                     position={[res.latitude, res.longitude]}
                   >
@@ -289,7 +328,8 @@ export default function Results() {
                                   {resource.location}
                                 </p>
                                 <p className="text-sm text-slate-500">
-                                  lat: {resource.latitude}, long: {resource.longitude}
+                                  lat: {resource.latitude}, long:{" "}
+                                  {resource.longitude}
                                 </p>
                                 <div className="flex items-center gap-2 mt-2 text-sm">
                                   {resource.status && (
