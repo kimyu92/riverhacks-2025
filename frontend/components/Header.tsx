@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AlertCircle, Menu, MapPin, Map, Info } from "lucide-react";
+import Image from "next/image";
+import { Menu, MapPin, Map, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -23,8 +24,15 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
       <div className="container flex items-center justify-between p-4">
         <Link href="/">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-6 w-6 text-red-500" />
-            <h1 className="text-xl font-bold text-slate-900">SafeAccessATX</h1>
+            <div className="h-10 flex items-center">
+              <Image
+                src="/logo_with_text.png"
+                alt="SafeAccessATX Logo"
+                width={180}
+                height={80}
+                style={{ height: '80px', width: 'auto' }}
+              />
+            </div>
           </div>
         </Link>
         <Sheet>
@@ -75,7 +83,7 @@ export default function Header({ isOffline, setIsOffline }: HeaderProps) {
                     href="/chat"
                     className="flex items-center gap-2 p-2 hover:bg-slate-100 rounded-md"
                   >
-                    <AlertCircle className="h-5 w-5" />
+                    <MapPin className="h-5 w-5" />
                     <span>Emergency Assistant</span>
                   </Link>
                 </li>
