@@ -175,10 +175,81 @@ curl -X POST http://localhost:8000/api/v1/shelters \
 
 ### Food Resources
 - `GET /api/v1/food-resources` - List all food resources
+  - **Query Parameters**:
+    - `zipcode` (optional): Filter food resources by zipcode area (required for SERP API results)
+    - `source` (optional): Data source to query - 'db', 'serp', or 'all' (default is 'all')
+  - **Response**: Array of food resource objects
+    ```json
+    [
+      {
+        "id": 1,                  // Only present for database resources
+        "name": "Food Bank Name", // Database field
+        "location": "Austin, TX", // Database field
+        "organization_id": 2,     // Database field
+        "title": "Food Bank Name", // SERP API field
+        "address": "123 Main St, Austin, TX", // SERP API field
+        "phone": "512-555-1234", // SERP API field (optional)
+        "website": "https://foodbank.org", // SERP API field (optional)
+        "description": "Description of services", // SERP API field (optional)
+        "place_id": "123456789", // SERP API unique identifier
+        "rating": 4.5, // SERP API rating (optional)
+        "reviews": 50, // SERP API review count (optional)
+        "directions": "https://maps.google.com/...", // SERP API directions (optional)
+        "gps_coordinates": { // Optional
+          "latitude": 30.2672,
+          "longitude": -97.7431
+        },
+        "source": "database" // Indicates whether from 'database' or 'serp'
+      }
+    ]
+    ```
 - `POST /api/v1/food-resources` - Add a new food resource (admin/volunteer)
+  - **Request Body**:
+    ```json
+    {
+      "name": "Central Food Pantry",
+      "location": "Austin, TX",
+      "organization_id": 1,     // Optional, defaults to user's organization
+      "title": "Central Food Pantry", // Optional
+      "address": "456 Main St, Austin, TX", // Optional
+      "phone": "512-555-6789", // Optional
+      "website": "https://foodpantry.org", // Optional
+      "description": "Free groceries every Tuesday", // Optional
+      "place_id": "place123456", // Optional
+      "rating": 4.7, // Optional
+      "reviews": 32, // Optional
+      "directions": "https://maps.google.com/...", // Optional
+      "gps_coordinates": { // Optional
+        "latitude": 30.2672,
+        "longitude": -97.7431
+      }
+      // Alternatively, can provide latitude and longitude as separate fields
+    }
+    ```
+  - **Response**: Created food resource object with 201 status code
+    ```json
+    {
+      "id": 3,
+      "name": "Central Food Pantry",
+      "location": "Austin, TX",
+      "organization_id": 1,
+      // Additional fields if provided
+    }
+    ```
 - `GET /api/v1/food-resources/<id>` - Get details for a specific food resource
+  - **Response**: Food resource object with 200 status code (same format as POST response)
+
 - `PUT /api/v1/food-resources/<id>` - Update food resource information (admin/volunteer)
+  - **Request Body**: Same format as POST but only include fields that need to be updated
+  - **Response**: Updated food resource object with 200 status code
+
 - `DELETE /api/v1/food-resources/<id>` - Remove a food resource (admin only)
+  - **Response**: Confirmation message with 200 status code
+    ```json
+    {
+      "message": "Food resource deleted successfully"
+    }
+    ```
 
 ### Safety Reports
 - `GET /api/v1/safety-reports` - List all safety reports with optional filters

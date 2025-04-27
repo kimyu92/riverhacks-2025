@@ -128,23 +128,80 @@ def seed_database():
     db.session.commit()
     print("Added hospitals")
 
-    # Create food resources
+    # Create food resources with enhanced data to match SERP API format
     food_resources = [
         FoodResource(
             name="Downtown Food Bank",
+            title="Downtown Food Bank",
             location="150 Center St, City Center",
-            organization_id=feeding_america.id
+            address="150 Center St, City Center",
+            organization_id=feeding_america.id,
+            phone="555-111-2222",
+            website="https://downtownfoodbank.org",
+            description="Provides emergency food assistance to those in need",
+            rating=4.8,
+            reviews=125,
+            latitude=30.2650,
+            longitude=-97.7466
         ),
         FoodResource(
             name="Westside Community Kitchen",
+            title="Westside Community Kitchen",
             location="250 West St, Westside",
-            organization_id=salvation_army.id
+            address="250 West St, Westside",
+            organization_id=salvation_army.id,
+            phone="555-222-3333",
+            website="https://westsidekitchen.org",
+            description="Hot meals served daily from 11am-2pm",
+            rating=4.6,
+            reviews=89,
+            latitude=30.2750,
+            longitude=-97.7566
         ),
         FoodResource(
             name="Eastside Food Pantry",
+            title="Eastside Food Pantry",
             location="350 East Ave, Eastside",
-            organization_id=redcross.id
+            address="350 East Ave, Eastside",
+            organization_id=redcross.id,
+            phone="555-333-4444",
+            website="https://eastsidepantry.org",
+            description="Distributes groceries every Tuesday and Thursday",
+            rating=4.7,
+            reviews=102,
+            latitude=30.2550,
+            longitude=-97.7266
         ),
+        FoodResource(
+            name="Central Texas Food Bank",
+            title="Central Texas Food Bank",
+            location="6500 Metropolis Dr, Austin, TX 78744",
+            address="6500 Metropolis Dr, Austin, TX 78744",
+            organization_id=feeding_america.id,
+            phone="(512) 282-2111",
+            website="https://www.centraltexasfoodbank.org/",
+            description="Main food bank serving Central Texas region",
+            place_id="ChIJjVMQpzSzRIYRtKZqhy25smo",
+            rating=4.7,
+            reviews=451,
+            latitude=30.203436,
+            longitude=-97.7102731
+        ),
+        FoodResource(
+            name="Hungry Souls",
+            title="Hungry Souls",
+            location="7100 Brodie Ln, Austin, TX 78745",
+            address="7100 Brodie Ln, Austin, TX 78745",
+            organization_id=None,
+            phone="(512) 524-9067",
+            website="https://hungry-souls.org/",
+            description="They help feed families by sending the food to schools in and around austin.",
+            place_id="ChIJBdd0mThJW4YR1VPtgIBirA4",
+            rating=4.9,
+            reviews=11,
+            latitude=30.212557,
+            longitude=-97.8322525
+        )
     ]
     db.session.add_all(food_resources)
     db.session.commit()
