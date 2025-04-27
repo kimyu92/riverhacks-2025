@@ -3,7 +3,7 @@ from db import db
 class Shelter(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(120), nullable=False)
-  location = db.Column(db.String(255), nullable=False)
+  address = db.Column(db.String(255), nullable=False)
   wheelchair_accessible = db.Column(db.Boolean, default=False)
   visual_accommodations = db.Column(db.Boolean, default=False)
   audio_accommodations = db.Column(db.Boolean, default=False)
@@ -11,7 +11,6 @@ class Shelter(db.Model):
 
   # Additional fields to match SERP API format
   title = db.Column(db.String(120))
-  address = db.Column(db.String(255))
   phone = db.Column(db.String(20))
   website = db.Column(db.String(255))
   description = db.Column(db.Text)
@@ -26,13 +25,12 @@ class Shelter(db.Model):
     return {
       'id': self.id,
       'name': self.name,
-      'location': self.location,
+      'address': self.address,
       'wheelchair_accessible': self.wheelchair_accessible,
       'visual_accommodations': self.visual_accommodations,
       'audio_accommodations': self.audio_accommodations,
       'organization_id': self.organization_id,
       'title': self.title or self.name,
-      'address': self.address or self.location,
       'phone': self.phone,
       'website': self.website,
       'description': self.description,
