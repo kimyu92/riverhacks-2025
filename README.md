@@ -168,10 +168,93 @@ curl -X POST http://localhost:8000/api/v1/shelters \
 
 ### Shelters
 - `GET /api/v1/shelters` - List all shelters
+  - **Query Parameters**:
+    - `zipcode` (optional): Filter shelters by zipcode area (required for SERP API results)
+    - `source` (optional): Data source to query - 'db', 'serp', or 'all' (default is 'all')
+    - `wheelchair` (optional): Filter shelters by wheelchair accessibility
+    - `visual` (optional): Filter shelters by visual accommodations
+    - `audio` (optional): Filter shelters by audio accommodations
+  - **Response**: Array of shelter objects
+    ```json
+    [
+      {
+        "id": 1,                  // Only present for database resources
+        "name": "Downtown Emergency Shelter", // Database field
+        "location": "123 Main St, Austin, TX", // Database field
+        "organization_id": 2,     // Database field
+        "wheelchair_accessible": true, // Database field
+        "visual_accommodations": true, // Database field
+        "audio_accommodations": false, // Database field
+        "title": "Downtown Emergency Shelter", // SERP API field
+        "address": "123 Main St, Austin, TX", // SERP API field
+        "phone": "512-555-1234", // SERP API field (optional)
+        "website": "https://shelter.org", // SERP API field (optional)
+        "description": "Description of services", // SERP API field (optional)
+        "place_id": "123456789", // SERP API unique identifier
+        "rating": 4.5, // SERP API rating (optional)
+        "reviews": 50, // SERP API review count (optional)
+        "directions": "https://maps.google.com/...", // SERP API directions (optional)
+        "gps_coordinates": { // Optional
+          "latitude": 30.2672,
+          "longitude": -97.7431
+        },
+        "source": "database" // Indicates whether from 'database' or 'serp'
+      }
+    ]
+    ```
 - `POST /api/v1/shelters` - Add a new shelter (admin/volunteer)
+  - **Request Body**:
+    ```json
+    {
+      "name": "Central Emergency Shelter",
+      "location": "Austin, TX",
+      "organization_id": 1,     // Optional, defaults to user's organization
+      "wheelchair_accessible": true, // Optional
+      "visual_accommodations": false, // Optional
+      "audio_accommodations": true, // Optional
+      "title": "Central Emergency Shelter", // Optional
+      "address": "456 Main St, Austin, TX", // Optional
+      "phone": "512-555-6789", // Optional
+      "website": "https://shelter.org", // Optional
+      "description": "Open 24/7 with 50 beds", // Optional
+      "place_id": "place123456", // Optional
+      "rating": 4.7, // Optional
+      "reviews": 32, // Optional
+      "directions": "https://maps.google.com/...", // Optional
+      "gps_coordinates": { // Optional
+        "latitude": 30.2672,
+        "longitude": -97.7431
+      }
+      // Alternatively, can provide latitude and longitude as separate fields
+    }
+    ```
+  - **Response**: Created shelter object with 201 status code
+    ```json
+    {
+      "id": 3,
+      "name": "Central Emergency Shelter",
+      "location": "Austin, TX",
+      "organization_id": 1,
+      "wheelchair_accessible": true,
+      "visual_accommodations": false,
+      "audio_accommodations": true,
+      // Additional fields if provided
+    }
+    ```
 - `GET /api/v1/shelters/<id>` - Get details for a specific shelter
+  - **Response**: Shelter object with 200 status code (same format as POST response)
+
 - `PUT /api/v1/shelters/<id>` - Update shelter information (admin/volunteer)
+  - **Request Body**: Same format as POST but only include fields that need to be updated
+  - **Response**: Updated shelter object with 200 status code
+
 - `DELETE /api/v1/shelters/<id>` - Remove a shelter (admin only)
+  - **Response**: Confirmation message with 200 status code
+    ```json
+    {
+      "message": "Shelter deleted successfully"
+    }
+    ```
 
 ### Food Resources
 - `GET /api/v1/food-resources` - List all food resources

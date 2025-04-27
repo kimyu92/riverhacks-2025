@@ -76,16 +76,37 @@ def create_shelter():
 
     data = request.get_json()
 
-    # Create new shelter with accessibility information
+    # Create new shelter with all available fields
     shelter = Shelter(
         name=data.get('name'),
         location=data.get('location'),
         wheelchair_accessible=data.get('wheelchair_accessible', False),
         visual_accommodations=data.get('visual_accommodations', False),
         audio_accommodations=data.get('audio_accommodations', False),
-        organization_id=data.get(
-            'organization_id', current_user.organization_id)
+        organization_id=data.get('organization_id', current_user.organization_id),
+
+        # Additional fields from SERP API format
+        title=data.get('title'),
+        address=data.get('address'),
+        phone=data.get('phone'),
+        website=data.get('website'),
+        description=data.get('description'),
+        place_id=data.get('place_id'),
+        rating=data.get('rating'),
+        reviews=data.get('reviews'),
+        directions=data.get('directions')
     )
+
+    # Handle GPS coordinates
+    gps_coordinates = data.get('gps_coordinates')
+    if gps_coordinates:
+        if isinstance(gps_coordinates, dict):
+            shelter.latitude = gps_coordinates.get('latitude')
+            shelter.longitude = gps_coordinates.get('longitude')
+    else:
+        # Allow direct latitude/longitude fields too
+        shelter.latitude = data.get('latitude')
+        shelter.longitude = data.get('longitude')
 
     db.session.add(shelter)
     db.session.commit()
@@ -114,7 +135,7 @@ def update_shelter(shelter_id):
     shelter = Shelter.query.get_or_404(shelter_id)
     data = request.get_json()
 
-    # Update fields if provided
+    # Update core fields if provided
     if 'name' in data:
         shelter.name = data['name']
     if 'location' in data:
@@ -125,6 +146,40 @@ def update_shelter(shelter_id):
         shelter.visual_accommodations = data['visual_accommodations']
     if 'audio_accommodations' in data:
         shelter.audio_accommodations = data['audio_accommodations']
+
+    # Update additional SERP API fields if provided
+    if 'title' in data:
+        shelter.title = data['title']
+    if 'address' in data:
+        shelter.address = data['address']
+    if 'phone' in data:
+        shelter.phone = data['phone']
+    if 'website' in data:
+        shelter.website = data['website']
+    if 'description' in data:
+        shelter.description = data['description']
+    if 'place_id' in data:
+        shelter.place_id = data['place_id']
+    if 'rating' in data:
+        shelter.rating = data['rating']
+    if 'reviews' in data:
+        shelter.reviews = data['reviews']
+    if 'directions' in data:
+        shelter.directions = data['directions']
+
+    # Handle GPS coordinates
+    gps_coordinates = data.get('gps_coordinates')
+    if gps_coordinates and isinstance(gps_coordinates, dict):
+        if 'latitude' in gps_coordinates:
+            shelter.latitude = gps_coordinates['latitude']
+        if 'longitude' in gps_coordinates:
+            shelter.longitude = gps_coordinates['longitude']
+    else:
+        # Allow direct latitude/longitude fields too
+        if 'latitude' in data:
+            shelter.latitude = data['latitude']
+        if 'longitude' in data:
+            shelter.longitude = data['longitude']
 
     db.session.commit()
 
