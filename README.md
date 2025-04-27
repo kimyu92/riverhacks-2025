@@ -54,8 +54,8 @@ make db-seed
 This will populate the database with organizations, users, shelters, hospitals, food resources, and safety reports for testing.
 
 4. Access the application:
-- API: http://localhost:8000
-- Frontend: http://localhost:3000
+- API: https://localhost/api/v1
+- Frontend: https://localhost
 
 ### Common Command Scenarios
 
@@ -118,7 +118,7 @@ pnpm run dev
 Most endpoints require authentication. First, obtain a JWT token:
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/login \
+curl -X POST https://localhost/api/v1/login \
   -H "Content-Type: application/json" \
   -d '{"username": "admin", "password": "admin123"}'
 ```
@@ -140,10 +140,10 @@ Then use the token in subsequent requests:
 
 ```bash
 # public
-curl -X GET http://localhost:8000/api/v1/shelters
+curl -X GET https://localhost/api/v1/shelters
 
 # authed protected
-curl -X POST http://localhost:8000/api/v1/shelters \
+curl -X POST https://localhost/api/v1/shelters \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
