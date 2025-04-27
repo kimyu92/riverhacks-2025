@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import 'leaflet/dist/leaflet.css';                                     // add
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'; // add
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -163,6 +165,12 @@ export default function Results() {
     fetchResources();
   }, [resourceType]);
 
+  // derive center from first resource or fallback
+  const mapCenter: [number, number] =
+    resources.length > 0 && resources[0].latitude && resources[0].longitude
+      ? [resources[0].latitude, resources[0].longitude]
+      : [51.505, -0.09]; // default
+
   return (
     <div className="flex flex-col h-screen">
       {/* Search Bar */}
@@ -189,7 +197,33 @@ export default function Results() {
         {/* Map Section */}
         <div className="flex-1 p-4">
           <div className="h-full">
-            <MapPlaceholder loading={loading} resources={resources} />
+            {/* remove MapPlaceholder */}
+            <MapContainer
+              center={mapCenter}
+              zoom={13}
+              scrollWheelZoom={false}
+              className="h-full w-full"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {resources.map((res) =>
+                res.latitude && res.longitude ? (
+                  <Marker
+                    key={res.id}
+                    position={[res.latitude, res.longitude]}
+                  >
+                    <Popup>
+                      <div>
+                        <h3 className="font-medium">{res.name}</h3>
+                        <p className="text-sm">{res.location}</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ) : null
+              )}
+            </MapContainer>
           </div>
         </div>
 
