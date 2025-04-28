@@ -13,9 +13,12 @@ services:
       context: ./backend
     volumes:
       - ./backend:/app
+      - ./nginx/ssl:/app/ssl  # Share SSL certificates with the backend container
     environment:
       FLASK_ENV: development
       DATABASE_URL: postgresql://hackuser:hackpass@db:5432/hacksafety
+      JWT_SSL_CERT_PATH: /app/ssl/nginx.crt  # Point to certificate inside container
+      JWT_SSL_KEY_PATH: /app/ssl/nginx.key   # Point to key inside container
     depends_on:
       - db
     command: python app.py
