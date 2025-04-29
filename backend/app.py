@@ -7,6 +7,9 @@ from db import db
 from controllers import register_blueprints
 from datetime import timedelta
 import logging
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 
 load_dotenv()
 
@@ -16,6 +19,9 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
+# Enable debug mode by default
+app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+
 # Set up database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://hackuser:hackpass@db:5432/hacksafety')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -23,31 +29,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # JWT Configuration
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'super-secret')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+app.config['JWT_ALGORITHM'] = os.getenv('JWT_ALGORITHM', 'RS256')
 
-# SSL certificate paths for JWT (inside Docker container)
+# Load RSA keys for JWT (use self-signed cert for RS256)
 CERT_PATH = os.getenv('JWT_SSL_CERT_PATH', '/app/ssl/nginx.crt')
 KEY_PATH = os.getenv('JWT_SSL_KEY_PATH', '/app/ssl/nginx.key')
+with open(KEY_PATH, 'rb') as key_file:
+  app.config['JWT_PRIVATE_KEY'] = key_file.read()
+with open(CERT_PATH, 'rb') as cert_file:
+  cert_data = cert_file.read()
+  try:
+    cert = x509.load_pem_x509_certificate(cert_data, default_backend())
+    app.config['JWT_PUBLIC_KEY'] = cert.public_key().public_bytes(
+      encoding=serialization.Encoding.PEM,
+      format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+  except Exception:
+    # Fallback: assume file is already a PEM encoded public key
+    app.config['JWT_PUBLIC_KEY'] = cert_data
 
-logger.info(f"Looking for SSL certificates at: {CERT_PATH} and {KEY_PATH}")
-
-# For development environment, completely disable signature verification
-# IMPORTANT: This should NEVER be done in production
-if os.getenv('FLASK_ENV') == 'development' or os.getenv('FLASK_DEBUG') == 'True':
-    # Disable JWT verification for development with self-signed certificates
-    app.config['JWT_VERIFY'] = False  # Disable signature verification
-    app.config['JWT_VERIFY_CLAIMS'] = False  # Disable claims verification
-    app.config['JWT_VERIFY_EXPIRATION'] = False  # Disable expiration check for dev
-    app.config['JWT_IDENTITY_CLAIM'] = 'sub'  # Default is 'sub'
-    logger.warning("⚠️ SECURITY WARNING: JWT verification is DISABLED for development!")
-else:
-    # Production settings - always verify tokens
-    app.config['JWT_VERIFY'] = True
-    app.config['JWT_VERIFY_CLAIMS'] = True
-    app.config['JWT_VERIFY_EXPIRATION'] = True
-    logger.info("JWT verification enabled for production environment")
-
-# Enable debug mode by default
-app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+logger.info(f"Using JWT algorithm: {app.config['JWT_ALGORITHM']}")
 
 # Initialize extensions
 db.init_app(app)
