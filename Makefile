@@ -108,8 +108,14 @@ remove-images:
 
 # Regenerate SSL certificates
 ssl-regen:
-	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/nginx.key -out nginx/ssl/nginx.crt -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"
-	@echo "SSL certificates regenerated. Restart Nginx to apply changes: make nginx-restart"
+	@mkdir -p ./nginx/ssl
+	openssl req -x509 -nodes -days 365 \
+		-newkey rsa:2048 \
+		-keyout ./nginx/ssl/nginx.key \
+		-out ./nginx/ssl/nginx.crt \
+		-subj "/CN=localhost" \
+		-addext "subjectAltName=DNS:localhost"
+	@echo "SSL certificates regenerated in ./nginx/ssl. Restart Nginx to apply changes: make nginx-restart"
 
 # Restart Nginx to apply new configurations/certificates
 nginx-restart:
